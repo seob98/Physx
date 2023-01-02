@@ -1,0 +1,20 @@
+(https://www.youtube.com/watch?v=pSirBt4OgXQ)
+vcpkg 설치
+clone 이후 cmd에서 해당 디렉토리에 진입 후 	bootstrap-vcpkg.bat 엔터
+visual studio 연계를 위해			vcpkg integrate install 엔터
+
+
+(https://rootblog.tistory.com/137)
+윈도우 디펜더에서 vcpkg 폴더 예외 추가
+
+
+cmd창에서
+vcpkg install physx 하고 이상한 오류문구 뜨면 c누르면 설치.
+vcpkg list / vcpkg install physx로 설치여부 확인가능.
+
+
+documents
+(https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Index.html)
+physx doc 4.1
+
+설치파일을 사용해 pvd 설치
