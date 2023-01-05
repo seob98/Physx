@@ -4,8 +4,10 @@ clone 이후 cmd에서 해당 디렉토리에 진입 후 	bootstrap-vcpkg.bat �
 visual studio 연계를 위해			vcpkg integrate install 엔터
 
 
-(https://rootblog.tistory.com/137)
-윈도우 디펜더에서 vcpkg 폴더 예외 추가
+(윗링크 영상 10:35)
+환경변수-고급-환경변수-시스템 변수-새로만들기
+	변수 이름 : VCPKG_DEFAULT_TRIPLET
+	변수 값 : x64-windows
 
 
 cmd창에서
