@@ -1,3 +1,0 @@
-C:\Users\Administrator\source\repos\PhysX-Setup\PhysX-Setup\x64\Debug\PhysX-Setup.vcxproj.CopyComplete
-C:\Users\Administrator\Desktop\졸작\PhysX-Setup\PhysX-Setup\x64\Debug\PhysX-Setup.vcxproj.CopyComplete
-C:\Users\PC-2\Desktop\졸작\physx\PhysX-Setup\PhysX-Setup\x64\Debug\PhysX-Setup.vcxproj.CopyComplete

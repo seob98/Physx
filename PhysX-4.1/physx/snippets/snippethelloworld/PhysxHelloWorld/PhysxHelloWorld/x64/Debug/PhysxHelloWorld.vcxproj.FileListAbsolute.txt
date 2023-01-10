@@ -1,0 +1,2 @@
+C:\Users\PC-2\Desktop\PhysX-4.1\PhysX-4.1\physx\snippets\snippethelloworld\PhysxHelloWorld\PhysxHelloWorld\x64\Debug\PhysxHelloWorld.vcxproj.CopyComplete
+C:\Users\PC-2\Desktop\졸작\physx\PhysX-4.1\physx\snippets\snippethelloworld\PhysxHelloWorld\PhysxHelloWorld\x64\Debug\PhysxHelloWorld.vcxproj.CopyComplete
