@@ -12,9 +12,15 @@ public:
 	void Release();
 
 	void CreateStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic);
-	PxRigidDynamic* CreateDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity = PxVec3(0));
+	PxRigidDynamic* CreateDynamic(const PxTransform& t, const PxGeometry& geometry);
 
-	void SetLinearVelocity();
+	void SetLinearVelocity();			//가속도 설정
+	void SetGlobalPose();				//위치 변경
+	void SetKinematicTarget();
+	void AddForce();					//힘 적용
+
+	//velocity을 계속 적용하면 일정한 속도로 계속 나아간다. (명령을 내리는 순간 가속도를 해당 값으로 설정)
+	//
 
 private:
 

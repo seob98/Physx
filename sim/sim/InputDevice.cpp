@@ -1,13 +1,17 @@
 #include "InputDevice.h"
 
 
-InputDevice::InputDevice()
-{
-}
+//InputDevice::InputDevice()
+//{
+//}
+//
+//InputDevice::~InputDevice()
+//{
+//}
 
-InputDevice::~InputDevice()
-{
-}
+#define Instance (g_instance)
+
+ImplementSingletone(InputDevice);
 
 void InputDevice::WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -45,14 +49,14 @@ bool InputDevice::GetKey(const Key& key)
 	return GetAsyncKeyState((int)key);
 }
 
-bool InputDevice::GetKeyDown(const Key& key)
+const bool& InputDevice::GetKeyDown(const Key& key)
 {
-	return m_downState[(unsigned char)key];
+	return Instance.m_downState[(unsigned char)key];
 }
 
-bool InputDevice::GetKeyUp(const Key& key)
+const bool& InputDevice::GetKeyUp(const Key& key)
 {
-	return m_upState[(unsigned char)key];
+	return Instance.m_upState[(unsigned char)key];
 }
 
 void InputDevice::SetKeyDown(unsigned char key)

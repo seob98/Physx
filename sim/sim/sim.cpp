@@ -15,7 +15,6 @@ WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
 PhysDevice phys;
-InputDevice input;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -56,9 +55,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     PxReal stackZ = 10.0f;
 
 	for (PxU32 i = 0; i < 5; i++)
-		phys.CreateStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f, false);
+		phys.CreateStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f, true);
 
-	phys.CreateDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10), PxVec3(0, -50, -100));
+	phys.CreateDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10));
 
     while (msg.message != WM_QUIT)
     {
@@ -69,15 +68,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
 #pragma region Loop
-
-        if (input.GetKeyDown(Key::Right))
-            phys.SetLinearVelocity();
+        //phys.SetLinearVelocity();
+        //phys.SetGlobalPose();
+        phys.AddForce();
 
         for(int i =0; i<120; ++i)
             phys.StepSim();
 
-
-        input.SetUsed();
+        InputDevice::GetInstance()->SetUsed();
+  
 
 
     }
@@ -157,7 +156,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    input.WindowProcedure(message, wParam, lParam);
+    InputDevice::GetInstance()->WindowProcedure(message, wParam, lParam);
 
     switch (message)
     {

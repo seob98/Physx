@@ -47,16 +47,17 @@ enum class Key : unsigned char
 class InputDevice
 {
 public:
-	InputDevice();
-	~InputDevice();
+	//InputDevice();
+	//~InputDevice();
+	DeclareSingletone(InputDevice);
 
 
 public:
 	void WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam);
 
 	bool GetKey(const Key& key);
-	bool GetKeyDown(const Key& key);
-	bool GetKeyUp(const Key& key);
+	static const bool& GetKeyDown(const Key& key);
+	static const bool& GetKeyUp(const Key& key);
 
 	void SetKeyDown(unsigned char key);
 	void SetKeyUp(unsigned char key);

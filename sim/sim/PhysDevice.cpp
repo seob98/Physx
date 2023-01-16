@@ -65,9 +65,15 @@ void PhysDevice::CreateStack(const PxTransform& t, PxU32 size, PxReal halfExtent
 			if (!attributeStatic)
 			{
 				PxRigidDynamic* body = gPhysics->createRigidDynamic(t.transform(localTm));
+
+				body->setSleepThreshold(PxReal(5.f));						//Sleep 상태 전환을 위한 임계값 설정
+				body->setWakeCounter(PxReal(5.f));							//Wake 상태 전환을 위한 임계값 설정
+
 				body->attachShape(*shape);
-				PxRigidBodyExt::updateMassAndInertia(*body, 100.0f);
-				gScene->addActor(*body);
+				PxRigidBodyExt::updateMassAndInertia(*body, 100.0f);		//dynamic actor 질량 계산에 필요한 요소 : 질량, 관성값, 무게중심(관성축 위치 결정)
+				gScene->addActor(*body);									//updateMassAndInertia 등의 도우미 함수를 사용하면 dynamic actor의 질량계산을 쉽게할 수 있다.
+
+
 			}
 			else
 			{
@@ -80,20 +86,70 @@ void PhysDevice::CreateStack(const PxTransform& t, PxU32 size, PxReal halfExtent
 	shape->release();
 }
 
-PxRigidDynamic* PhysDevice::CreateDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+PxRigidDynamic* PhysDevice::CreateDynamic(const PxTransform& t, const PxGeometry& geometry)
 {
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
-	dynamic->setAngularDamping(0.5f);
-	//dynamic->setLinearVelocity(velocity);
+	dynamic->setAngularDamping(0.00001f);			//회전에 대한 저항력
+	dynamic->setLinearDamping(0.1f);				//이동에 대한 저항력
 	gScene->addActor(*dynamic);
 	
 	sample = dynamic;
 	return dynamic;
 }
-
 void PhysDevice::SetLinearVelocity()
 {
-	sample->setLinearVelocity(PxVec3(0, 50, 0));
+	if(InputDevice::GetInstance()->GetKey(Key::Left))
+		sample->setLinearVelocity(PxVec3(-10, 0, 0));
+	if (InputDevice::GetInstance()->GetKeyDown(Key::Right))
+		sample->setLinearVelocity(PxVec3(20, 0, 0));
+	if (InputDevice::GetInstance()->GetKeyDown(Key::Up))
+		sample->setLinearVelocity(PxVec3(0, 0, 20));
+	if (InputDevice::GetInstance()->GetKeyDown(Key::Down))
+		sample->setLinearVelocity(PxVec3(0, 0, -100));
+
+	if (InputDevice::GetInstance()->GetKeyDown(Key::Space))
+		sample->setLinearVelocity(PxVec3(0, 20, 0));
+
+}
+
+void PhysDevice::SetGlobalPose()
+{
+	if (InputDevice::GetInstance()->GetKeyDown(Key::Left))
+	{
+		PxTransform t = sample->getGlobalPose();
+		t.p.x += 10;
+		sample->setGlobalPose(t);
+	}
+}
+
+void PhysDevice::SetKinematicTarget()
+{
+}
+
+void PhysDevice::AddForce()
+{
+	//가속의 추가. 이미 움직이고 있는 물체에 적용하기 적합.
+	//PxForceMode::eFORCE					무게 적용
+	//PxForceMode::eACCELERATION			무게 무시
+
+	//순간적으로 속도를 적용. 점프에 사용하기 적합
+	//PxForceMode::eIMPULSE					무게 적용
+	//PxForceMode::eVELOCITY_CHANGE			무게 무시
+	 
+	float moveStrength = 10000000.f;
+	float jumpStrength = 1500000.f;
+
+	if (InputDevice::GetInstance()->GetKey(Key::Left))
+		sample->addForce(PxVec3(-moveStrength, 0, 0), PxForceMode::eFORCE);
+	if (InputDevice::GetInstance()->GetKey(Key::Right))
+		sample->addForce(PxVec3(moveStrength, 0, 0), PxForceMode::eFORCE);
+	if (InputDevice::GetInstance()->GetKey(Key::Up))
+		sample->addForce(PxVec3(0, 0, moveStrength), PxForceMode::eFORCE);
+	if (InputDevice::GetInstance()->GetKey(Key::Down))
+		sample->addForce(PxVec3(0, 0, -moveStrength), PxForceMode::eFORCE);
+
+	if (InputDevice::GetInstance()->GetKeyDown(Key::Space))
+		sample->addForce(PxVec3(0, jumpStrength, 0), PxForceMode::eIMPULSE);
 }
 
 
