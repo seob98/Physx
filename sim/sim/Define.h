@@ -1,5 +1,7 @@
 #pragma once
 
+#define PX_SIM_FRAMECNT 120.0f
+
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL;	}
 
 #define DeclareSingletone(Name)																		\

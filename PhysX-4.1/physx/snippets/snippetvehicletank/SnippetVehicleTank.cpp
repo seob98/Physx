@@ -513,7 +513,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	PX_UNUSED(key);
 }
 
-int snippetMain(int, const char*const*)
+int main(int, const char*const*)
 {
 #ifdef RENDER_SNIPPET
 	extern void renderLoop();

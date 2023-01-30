@@ -1,0 +1,9 @@
+<character controller> - 4.1 sdk guide
+https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/physxguide/Manual/CharacterControllers.html?highlight=controller
+
+<velocity & sleep thresold> - 3.4 sdk guide
+https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/guide/3.3.4/Manual/RigidBodyDynamics.html?highlight=setangulardamping
+
+<force, body, mass, forcemode> - unity 가이드 유튜브
+https://www.youtube.com/watch?v=h_MA36TGFsc
+

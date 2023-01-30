@@ -1,8 +1,8 @@
-﻿//#ifdef UNICODE
-//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
-//#else
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-//#endif
+﻿#ifdef UNICODE
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+#else
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#endif
 
 #include "framework.h"
 #include "sim.h"
@@ -54,9 +54,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     PxReal stackZ = 10.0f;
 
-	for (PxU32 i = 0; i < 5; i++)
-		phys.CreateStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f, true);
+	//for (PxU32 i = 0; i < 5; i++)
+		//phys.CreateStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f, true);
 
+    phys.CreateBox(true);
 	phys.CreateDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10));
 
     while (msg.message != WM_QUIT)
@@ -68,17 +69,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
 #pragma region Loop
-        //phys.SetLinearVelocity();
-        //phys.SetGlobalPose();
-        phys.AddForce();
+        // rigidBody 테스트 함수
+        phys.SampleUpdate();
 
-        for(int i =0; i<120; ++i)
+        for(int i =0; i< (int)PX_SIM_FRAMECNT; ++i)         //physic->step(deltaTime)
             phys.StepSim();
 
         InputDevice::GetInstance()->SetUsed();
-  
-
-
     }
 
 #pragma endregion

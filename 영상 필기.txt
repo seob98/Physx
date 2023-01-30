@@ -1,0 +1,15 @@
+RigidBody
+PxRigidActor
+PxRigidDynamic - 중력(mass), 가속도(velocity), linear/angular damping?, kinematic? LockAxis?
+[getGlobalPose(), isSleeping(), isKinematic(), AddForce(pxforcemode::enum), set Rot/Trans/Pos LockAxis]
+
+PxMaterial -> 마찰력, 반발력, 반발계수 결합모드
+
+Collider [ friend Rigidbody, m_material, m_shape, beforeLoc, beforeRot, Quat defaultRot  ]
+
+GetRigidBody = 콜라이더가 부착하는 상대. 강체라고 칭한다.
+GetGeometry = shape->getGeometry()
+material -> [ friction, restitution(반발력), restitutionCombineMode(반발계수 결합 모드),]
+
+(13:02)
+

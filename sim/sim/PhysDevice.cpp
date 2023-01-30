@@ -33,7 +33,7 @@ void PhysDevice::Init()
 
 void PhysDevice::StepSim()
 {
-	gScene->simulate(1.0f / 120.0f);
+	gScene->simulate(1.0f / PX_SIM_FRAMECNT);
 	gScene->fetchResults(true);
 }
 
@@ -51,6 +51,11 @@ void PhysDevice::Release()
 	PX_RELEASE(gFoundation);
 
 	printf("SnippetHelloWorld done.\n");
+}
+
+void PhysDevice::CreateController()
+{
+
 }
 
 void PhysDevice::CreateStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic)
@@ -86,6 +91,30 @@ void PhysDevice::CreateStack(const PxTransform& t, PxU32 size, PxReal halfExtent
 	shape->release();
 }
 
+void PhysDevice::CreateBox(bool attributeStatic)
+{
+	PxShape* shape = gPhysics->createShape(PxBoxGeometry(5.0f, 5.0f, 5.0f), *gMaterial);
+
+	if (!attributeStatic)
+	{
+		PxRigidDynamic* body = gPhysics->createRigidDynamic(PxTransform(PxVec3(0.f, 10.f, 0.f)));
+
+		body->setSleepThreshold(PxReal(5.f));						//Sleep 상태 전환을 위한 임계값 설정
+		body->setWakeCounter(PxReal(5.f));							//Wake 상태 전환을 위한 임계값 설정
+
+		body->attachShape(*shape);
+		PxRigidBodyExt::updateMassAndInertia(*body, 100.0f);		//dynamic actor 질량 계산에 필요한 요소 : 질량, 관성값, 무게중심(관성축 위치 결정)
+		gScene->addActor(*body);									//updateMassAndInertia 등의 도우미 함수를 사용하면 dynamic actor의 질량계산을 쉽게할 수 있다.
+	}
+	else
+	{
+		PxRigidStatic* body = gPhysics->createRigidStatic(PxTransform(PxVec3(0.f, 10.f, 0.f)));
+		body->attachShape(*shape);
+		gScene->addActor(*body);
+	}
+	shape->release();
+}
+
 PxRigidDynamic* PhysDevice::CreateDynamic(const PxTransform& t, const PxGeometry& geometry)
 {
 	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
@@ -96,29 +125,57 @@ PxRigidDynamic* PhysDevice::CreateDynamic(const PxTransform& t, const PxGeometry
 	sample = dynamic;
 	return dynamic;
 }
+
 void PhysDevice::SetLinearVelocity()
 {
+	//velocity을 매 업데이트에 적용하면 일정한 속도로 계속 나아간다. (명령을 내리는 순간 가속도를 해당 값으로 설정)
+
 	if(InputDevice::GetInstance()->GetKey(Key::Left))
 		sample->setLinearVelocity(PxVec3(-10, 0, 0));
 	if (InputDevice::GetInstance()->GetKeyDown(Key::Right))
 		sample->setLinearVelocity(PxVec3(20, 0, 0));
-	if (InputDevice::GetInstance()->GetKeyDown(Key::Up))
-		sample->setLinearVelocity(PxVec3(0, 0, 20));
 	if (InputDevice::GetInstance()->GetKeyDown(Key::Down))
-		sample->setLinearVelocity(PxVec3(0, 0, -100));
+		sample->setLinearVelocity(PxVec3(0, 0, 20));
+	if (InputDevice::GetInstance()->GetKeyDown(Key::Up))
+		sample->setLinearVelocity(PxVec3(0, 0, -20));
 
 	if (InputDevice::GetInstance()->GetKeyDown(Key::Space))
 		sample->setLinearVelocity(PxVec3(0, 20, 0));
 
 }
 
-void PhysDevice::SetGlobalPose()
+void PhysDevice::SetGlobalPosePosition()
 {
-	if (InputDevice::GetInstance()->GetKeyDown(Key::Left))
+	//if (InputDevice::GetInstance()->GetKeyDown(Key::Left))
+	//{
+	//	PxTransform t = sample->getGlobalPose();
+	//	t.p.x += 10;
+	//	sample->setGlobalPose(t);
+	//}
+}
+
+void PhysDevice::SetGlobalPoseRotation()	
+{
+	static float value = 0.f;
+
+	//if (InputDevice::GetInstance()->GetKeyDown(Key::F2))
+	//{
+	//	PxTransform pose = sample->getGlobalPose();
+	//	value += 0.1f;
+	//	//pose.q = PxQuat(value, PxVec3(0.f, 1.f, 0.f));		//axis는 normalized 된 값
+	//	pose.q = PxQuat(value, value, value, value);
+	//	sample->setGlobalPose(pose);
+	//}
+
+	if (InputDevice::GetInstance()->GetKeyDown(Key::F2))
 	{
-		PxTransform t = sample->getGlobalPose();
-		t.p.x += 10;
-		sample->setGlobalPose(t);
+		PxTransform pose = sample->getGlobalPose();
+
+		value += 0.1f;
+		//pose.q = PxQuat(value, PxVec3(0.f, 1.f, 0.f));		//axis는 normalized 된 값
+		pose.q = PxQuat(value, value, value, value);
+
+		sample->setGlobalPose(pose);
 	}
 }
 
@@ -139,6 +196,7 @@ void PhysDevice::AddForce()
 	float moveStrength = 10000000.f;
 	float jumpStrength = 1500000.f;
 
+	//addTorque : 정의된 축을 기준으로 오브젝트를 회전
 	if (InputDevice::GetInstance()->GetKey(Key::Left))
 		sample->addForce(PxVec3(-moveStrength, 0, 0), PxForceMode::eFORCE);
 	if (InputDevice::GetInstance()->GetKey(Key::Right))
@@ -150,6 +208,33 @@ void PhysDevice::AddForce()
 
 	if (InputDevice::GetInstance()->GetKeyDown(Key::Space))
 		sample->addForce(PxVec3(0, jumpStrength, 0), PxForceMode::eIMPULSE);
+}
+
+void PhysDevice::RecordStatus()
+{
+	bool static once{};
+	if (!once)
+	{
+		std::cout << "F1 : status" << std::endl;
+		std::cout << "F2 : rotate" << std::endl;
+		once = true;
+	}
+	if (InputDevice::GetInstance()->GetKeyDown(Key::F1))
+	{
+		PxTransform t = sample->getGlobalPose();
+		std::cout << "dynamic actor status" << std::endl;
+		std::cout << "p - ( " << t.p.x << " " << t.p.y << " " << t.p.z << " )" << std::endl;
+		std::cout << "q - ( " << t.q.x << " " << t.q.y << " " << t.q.z << " )" << std::endl;
+		std::cout << "Angle : " << t.q.getAngle() << std::endl;
+	}
+}
+
+void PhysDevice::SampleUpdate()
+{
+	RecordStatus();
+	AddForce();
+	SetGlobalPoseRotation();
+	//SetLinearVelocity();
 }
 
 

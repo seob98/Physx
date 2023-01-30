@@ -11,16 +11,21 @@ public:
 	void StepSim();
 	void Release();
 
+	void CreateController();
+
 	void CreateStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic);
+	void CreateBox(bool attributeStatic);
 	PxRigidDynamic* CreateDynamic(const PxTransform& t, const PxGeometry& geometry);
 
+	//Sample함수
 	void SetLinearVelocity();			//가속도 설정
-	void SetGlobalPose();				//위치 변경
+	void SetGlobalPosePosition();		//위치 변경
+	void SetGlobalPoseRotation();		//각도 변경
 	void SetKinematicTarget();
 	void AddForce();					//힘 적용
 
-	//velocity을 계속 적용하면 일정한 속도로 계속 나아간다. (명령을 내리는 순간 가속도를 해당 값으로 설정)
-	//
+	void RecordStatus();
+	void SampleUpdate();
 
 private:
 

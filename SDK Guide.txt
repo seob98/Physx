@@ -1,0 +1,21 @@
+<Reference Count>
+RefCnt를 하는 자료형
+(PxTriangleMesh, PxHeightField, PxConvexMesh, PxMaterial, PxShape)
+1) Shape가 Mesh, HeightField를 참조하는 경우
+2) Shape가 Material를 참조하는 경우
+3) RigidActor가 Shape를 참조하는 경우
+
+createShape로 모양을 만들고 RigidActor::attachshape()로 연결하면 RefCnt는 2.
+Release()호출로 RefCnt 1. 액터가 파괴되거나 shape가 분리되면 참조 카운트가 감소해 0으로 파괴됨.
+
+<Geometry>
+-Primitive : 기본형
+-Cooking과정을 거쳐야하는 Mesh.
+
+
+<Shape>
+용도 1 : RigidActor의 접촉기능
+용도 2 : 레이캐스트같은 쿼리 테스트
+용도 3 : 모양의 교차에 알림을 생성하는 트리거
+
+Shape는 pxGeometry와 pxMaterial를 하나씩 들고 있다. 
