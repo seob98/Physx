@@ -47,11 +47,7 @@ enum class Key : unsigned char
 class InputDevice
 {
 public:
-	//InputDevice();
-	//~InputDevice();
 	DeclareSingletone(InputDevice);
-
-
 public:
 	void WindowProcedure(UINT message, WPARAM wParam, LPARAM lParam);
 

@@ -1,21 +1,29 @@
 #pragma once
-
-#include "PxPhysicsAPI.h"
-
-using namespace physx;
+#include "framework.h"
 
 class PhysDevice
 {
+public:
+	DeclareSingletone(PhysDevice);
+
+private:
+	PhysDevice();
+	~PhysDevice();
+
 public:
 	void Init();
 	void StepSim();
 	void Release();
 
-	void CreateController();
 
-	void CreateStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic);
-	void CreateBox(bool attributeStatic);
-	PxRigidDynamic* CreateDynamic(const PxTransform& t, const PxGeometry& geometry);
+public:
+	PxPhysics* GetPhysics() const;
+
+public:
+	//Test용 함수
+	void CreateHelloWorldStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic);
+	void CreateHelloWorldBox(bool attributeStatic);
+	PxRigidDynamic* CreateHelloWorldDynamic(const PxTransform& t, const PxGeometry& geometry);
 
 	//Sample함수
 	void SetLinearVelocity();			//가속도 설정
@@ -28,20 +36,22 @@ public:
 	void SampleUpdate();
 
 private:
+	PxDefaultAllocator		m_Allocator;
+	PxDefaultErrorCallback	m_ErrorCallback;
 
-	PxDefaultAllocator		gAllocator;
-	PxDefaultErrorCallback	gErrorCallback;
+	PxFoundation* m_Foundation = NULL;
+	PxPhysics* m_Physics = NULL;
 
-	PxFoundation* gFoundation = NULL;
-	PxPhysics* gPhysics = NULL;
+	PxDefaultCpuDispatcher* m_Dispatcher = NULL;
+	PxScene* m_Scene = NULL;
 
-	PxDefaultCpuDispatcher* gDispatcher = NULL;
-	PxScene* gScene = NULL;
+	PxMaterial* m_Material = NULL;
 
-	PxMaterial* gMaterial = NULL;
+	PxPvd* m_Pvd = NULL;
 
-	PxPvd* gPvd = NULL;
 
+	//=============================
 	PxRigidDynamic* sample = NULL;
+	PxRigidActor* sample2 = NULL;
 };
 

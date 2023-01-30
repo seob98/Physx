@@ -13,11 +13,23 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\PhysDevice">
-      <UniqueIdentifier>{3f7602d0-3e76-4c1c-b530-22ffc54ddfd4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\InputDevice">
       <UniqueIdentifier>{922de22b-8056-44c2-931a-cd0d09095372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX">
+      <UniqueIdentifier>{16fb8ffa-8b2f-4c8c-b94d-a1422ab8eea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\PhysDevice">
+      <UniqueIdentifier>{3f7602d0-3e76-4c1c-b530-22ffc54ddfd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\RigidBody">
+      <UniqueIdentifier>{be24c8a6-3df7-4ceb-97a8-6c550c51b544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\Collider">
+      <UniqueIdentifier>{b69d61a4-8008-43cc-b5aa-a635cedf820b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Math">
+      <UniqueIdentifier>{7adcc7cd-b0f8-4bb9-9b66-3f4d773851de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,7 +46,7 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="PhysDevice.h">
-      <Filter>소스 파일\PhysDevice</Filter>
+      <Filter>소스 파일\PhysX\PhysDevice</Filter>
     </ClInclude>
     <ClInclude Include="Define.h">
       <Filter>헤더 파일</Filter>
@@ -42,16 +54,34 @@
     <ClInclude Include="InputDevice.h">
       <Filter>소스 파일\InputDevice</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>소스 파일\PhysX\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>소스 파일\PhysX\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3.h">
+      <Filter>소스 파일\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sim.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="PhysDevice.cpp">
-      <Filter>소스 파일\PhysDevice</Filter>
+      <Filter>소스 파일\PhysX\PhysDevice</Filter>
     </ClCompile>
     <ClCompile Include="InputDevice.cpp">
       <Filter>소스 파일\InputDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>소스 파일\PhysX\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>소스 파일\PhysX\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3.cpp">
+      <Filter>소스 파일\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

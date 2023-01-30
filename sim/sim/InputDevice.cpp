@@ -1,14 +1,5 @@
 #include "InputDevice.h"
 
-
-//InputDevice::InputDevice()
-//{
-//}
-//
-//InputDevice::~InputDevice()
-//{
-//}
-
 #define Instance (g_instance)
 
 ImplementSingletone(InputDevice);

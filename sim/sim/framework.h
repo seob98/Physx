@@ -15,6 +15,25 @@
 #include <tchar.h>
 #include <iostream>
 
+#include <vector>
+using namespace std;
+
+#include "PxPhysicsAPI.h"
+using namespace physx;
+
 #include "Define.h"
-#include "PhysDevice.h"
+
 #include "InputDevice.h"
+#include "PhysDevice.h"
+
+//physX
+#include "Collider.h"
+#include "RigidBody.h"
+
+
+
+
+
+
+
+

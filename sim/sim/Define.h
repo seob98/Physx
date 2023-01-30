@@ -17,3 +17,24 @@ Name* Name::GetInstance()																			\
 {																									\
 	return &g_instance;																				\
 }
+
+
+template <class T>
+inline void SafeDelete(T * &pointer)
+{
+	if (pointer)
+	{
+		delete pointer;
+		pointer = nullptr;
+	}
+}
+
+template <class T>
+inline void SafeDeleteArray(T * &arrayBegin)
+{
+	if (arrayBegin)
+	{
+		delete[] arrayBegin;
+		arrayBegin = nullptr;
+	}
+}

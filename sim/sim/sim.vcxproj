@@ -127,18 +127,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="PhysDevice.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="sim.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Vec3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="InputDevice.cpp" />
     <ClCompile Include="PhysDevice.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="sim.cpp" />
+    <ClCompile Include="Vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="sim.rc" />
