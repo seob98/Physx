@@ -68,6 +68,11 @@ PxPhysics* PhysDevice::GetPhysics() const
 	return m_Physics;
 }
 
+PxMaterial* PhysDevice::GetDefaultMaterial() const
+{
+	return m_Material;
+}
+
 
 
 void PhysDevice::CreateHelloWorldStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic)

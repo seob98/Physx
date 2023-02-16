@@ -31,6 +31,9 @@
     <Filter Include="소스 파일\Math">
       <UniqueIdentifier>{7adcc7cd-b0f8-4bb9-9b66-3f4d773851de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PhysX\Collider\Capsule">
+      <UniqueIdentifier>{496d4e2f-28fb-4e2c-a4f6-41d4dc3cb0eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -63,6 +66,9 @@
     <ClInclude Include="Vec3.h">
       <Filter>소스 파일\Math</Filter>
     </ClInclude>
+    <ClInclude Include="CapsuleCollider.h">
+      <Filter>소스 파일\PhysX\Collider\Capsule</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sim.cpp">
@@ -82,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Vec3.cpp">
       <Filter>소스 파일\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>소스 파일\PhysX\Collider\Capsule</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

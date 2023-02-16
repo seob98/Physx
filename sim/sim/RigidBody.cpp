@@ -9,8 +9,6 @@ void RigidBody::Init()
 	m_body = device->GetPhysics()->createRigidDynamic(pose);
 	m_body->setMass(1);
 	m_body->userData = this;
-
-
 }
 
 void RigidBody::AttachAll()
@@ -56,12 +54,25 @@ void RigidBody::Detach(Collider* collider)
 	UpdateMassAndInertia();
 }
 
-void RigidBody::SetPosition(const float x, const float y, const float z)
+void RigidBody::SetPosition(const float x, const float y, const float z, bool sleep)
 {
+	PxTransform t = m_body->getGlobalPose();
+	t.p.x = x;
+	t.p.y = y;
+	t.p.z = z;
+
+	m_body->setGlobalPose(t, sleep);
 }
 
 void RigidBody::SetRotation(float radian, PxVec3 axis)
 {
+	PxTransform t = m_body->getGlobalPose();
+
+	float value = t.q.getAngle();
+
+	t.q = PxQuat(value + 10, PxVec3(0.f, 1.f, 0.f));		//axis´Â normalized µÈ °ª
+
+	m_body->setGlobalPose(t);
 }
 
 void RigidBody::UpdateMassAndInertia()

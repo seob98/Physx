@@ -2,6 +2,23 @@
 
 #include "framework.h"
 
+enum class Interpolate
+{
+	None,
+	Interpolate,
+	Extrapolate,
+};
+
+enum class PhysicsAxis
+{
+	NONE = 0,			//0000
+	X = 1 << 0,			//0001
+	Y = 1 << 1,			//0010
+	Z = 1 << 2,			//0100
+	All = X | Y | Z,	//0111
+						//AND, OR연산으로 확인 가능
+};
+
 enum class ForceMode
 {
 	//가속의 추가. 이미 움직이고 있는 물체에 적용하기 적합.
@@ -34,7 +51,7 @@ public:
 
 public:
 	// 프레임워크 구현되는대로 맞게 인자 수정
-	void SetPosition(const float x, const float y, const float z);
+	void SetPosition(const float x, const float y, const float z, bool sleep);
 	
 	//쿼터니언 구현 후 작업
 	//void SetRotation(Quat& rotation);
@@ -43,43 +60,53 @@ public:
 
 public:
 	void UpdateMassAndInertia();
-	bool IsRigidbodySleep() const;
 
-	void SetRigidbodySleep(bool value);
+	/*
+	//bool IsRigidbodySleep() const;
 
-	float GetMass() const;
+	//void SetRigidbodySleep(bool value);
 
-	void SetMass(float value);
+	//float GetMass() const;
 
-	void SetLinearDamping(float value);
+	//void SetMass(float value);
 
-	float GetLinearDamping() const;
+	//void SetLinearDamping(float value);
 
-	void SetAngularDamping(float value);
+	//float GetLinearDamping() const;
 
-	float GetAngularDamping() const;
+	//void SetAngularDamping(float value);
 
-	Vec3 GetVelocity() const;
+	//float GetAngularDamping() const;
 
-	void SetVelocity(const Vec3& velocity);
+	////Vec3 GetVelocity() const;
 
-	void AddForce(const Vec3& force, ForceMode forceMode);
+	//void SetVelocity(const Vec3& velocity);
 
-	void ClearForce(ForceMode forceMode);
+	//void AddForce(const Vec3& force, ForceMode forceMode);
 
-	Vec3 GetAngularVelocity() const;
+	//void ClearForce(ForceMode forceMode);
 
-	void SetAngularVelocity(const Vec3& angularVelocity);
+	////Vec3 GetAngularVelocity() const;
 
-	void SetRotationLockAxis(PhysicsAxis axes, bool value);
+	//void SetAngularVelocity(const Vec3& angularVelocity);
 
-	bool GetRotationLockAxis(PhysicsAxis axes) const;
+	//void SetRotationLockAxis(PhysicsAxis axes, bool value);
 
-	void SetTranslationLockAxis(PhysicsAxis axes, bool value);
+	//bool GetRotationLockAxis(PhysicsAxis axes) const;
 
-	bool GetTranslationLockAxis(PhysicsAxis axes) const;
+	//void SetTranslationLockAxis(PhysicsAxis axes, bool value);
 
+	//bool GetTranslationLockAxis(PhysicsAxis axes) const;
+*/
 private:
 	PxRigidDynamic* m_body;
+
+	//bool m_continous = false;
+
+	//class RigibdoyInterpolateBase* m_currentInterpolate = nullptr;
+
+	//class RigidbodyInterpolater* m_interpolationer = nullptr;
+
+	//class RigidbodyExtrapolater* m_extrapolater = nullptr;
 };
 

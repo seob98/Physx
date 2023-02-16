@@ -19,6 +19,8 @@ public:
 public:
 	PxPhysics* GetPhysics() const;
 
+	PxMaterial* GetDefaultMaterial() const;
+
 public:
 	//Test¿ë ÇÔ¼ö
 	void CreateHelloWorldStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic);
