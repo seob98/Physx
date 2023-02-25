@@ -1,3 +1,4 @@
+#include "framework.h"
 #include "InputDevice.h"
 
 #define Instance (g_instance)

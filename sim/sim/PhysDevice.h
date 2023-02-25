@@ -1,5 +1,11 @@
 #pragma once
-#include "framework.h"
+#include "Client_Defines.h"
+
+enum class ColliderShape;
+
+class RigidBody;
+class MySimulationEventCallback;
+class MyFilterShader;
 
 class PhysDevice
 {
@@ -18,23 +24,21 @@ public:
 
 public:
 	PxPhysics* GetPhysics() const;
-
 	PxMaterial* GetDefaultMaterial() const;
+	PxScene* GetScene() const;
 
 public:
 	//Test용 함수
 	void CreateHelloWorldStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic);
 	void CreateHelloWorldBox(bool attributeStatic);
-	PxRigidDynamic* CreateHelloWorldDynamic(const PxTransform& t, const PxGeometry& geometry);
+	void CreateHelloWorldDynamic(const PxTransform& t, const PxGeometry& geometry);
 
-	//Sample함수
+	void CreateDynamic(ColliderShape shape, float posX, float posY, float posZ);
+
 	void SetLinearVelocity();			//가속도 설정
-	void SetGlobalPosePosition();		//위치 변경
 	void SetGlobalPoseRotation();		//각도 변경
-	void SetKinematicTarget();
 	void AddForce();					//힘 적용
 
-	void RecordStatus();
 	void SampleUpdate();
 
 private:
@@ -50,10 +54,15 @@ private:
 	PxMaterial* m_Material = NULL;
 
 	PxPvd* m_Pvd = NULL;
+	MySimulationEventCallback* m_eventCallback = nullptr;
+	MyFilterShader* m_filterShader = nullptr;
 
 
-	//=============================
-	PxRigidDynamic* sample = NULL;
-	PxRigidActor* sample2 = NULL;
+	vector<RigidBody*>	rigidBodies;
+
+	//old
+	vector<PxRigidDynamic*> rigidDynamics;
+	vector<PxRigidStatic*> rigidStatics;
+	PxRigidDynamic* sample = nullptr;
 };
 

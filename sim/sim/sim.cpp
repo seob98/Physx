@@ -4,8 +4,10 @@
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #endif
 
+#pragma once
 #include "framework.h"
 #include "sim.h"
+#include "Client_Defines.h"
 
 #define MAX_LOADSTRING 100
 
@@ -13,8 +15,6 @@
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
-
-//PhysDevice phys;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -48,7 +48,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg{};
 #pragma endregion
-
     
     PhysDevice::GetInstance()->Init();
 
@@ -57,8 +56,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//for (PxU32 i = 0; i < 5; i++)
 		//phys.CreateStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f, true);
 
-    PhysDevice::GetInstance()->CreateHelloWorldBox(true);
-    PhysDevice::GetInstance()->CreateHelloWorldDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10));
+    //PhysDevice::GetInstance()->CreateHelloWorldBox(true);
+    //PhysDevice::GetInstance()->CreateHelloWorldDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10));
+    PhysDevice::GetInstance()->CreateDynamic(ColliderShape::COLLIDER_SPHERE, 20, 10, 10);
+    PhysDevice::GetInstance()->CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 10, 0);
     
     while (msg.message != WM_QUIT)
     {

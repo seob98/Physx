@@ -14,22 +14,27 @@
 #include <memory.h>
 #include <tchar.h>
 #include <iostream>
-
+#include <mutex>
+#include <algorithm>
 #include <vector>
 using namespace std;
 
-#include "PxPhysicsAPI.h"
+#include <PxPhysicsAPI.h>
+//#include "PxPhysicsAPI.h"
 using namespace physx;
 
-#include "Define.h"
-
-#include "InputDevice.h"
-#include "PhysDevice.h"
-
-//physX
-#include "Collider.h"
-#include "RigidBody.h"
-
+//#include "Define.h"
+//
+//#include "InputDevice.h"
+//#include "PhysDevice.h"
+//
+////physX
+//#include "Collider.h"
+//#include "RigidBody.h"
+////#include "CapsuleCollider.h"
+//#include "BoxCollider.h"
+//#include "SphereCollider.h"
+//#include "MySimulationEventCallback.h"
 
 
 

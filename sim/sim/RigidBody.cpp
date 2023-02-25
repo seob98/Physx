@@ -1,6 +1,9 @@
+#include "framework.h"
 #include "RigidBody.h"
+#include "BoxCollider.h"
+#include "SphereCollider.h"
 
-void RigidBody::Init()
+void RigidBody::Init(ColliderShape shape)
 {
 	auto device = PhysDevice::GetInstance();
 
@@ -9,14 +12,48 @@ void RigidBody::Init()
 	m_body = device->GetPhysics()->createRigidDynamic(pose);
 	m_body->setMass(1);
 	m_body->userData = this;
+
+	ApplyFlags();
+
+	device->GetScene()->addActor(*m_body);
+
+	switch (shape)
+	{
+	case ColliderShape::COLLIDER_BOX:
+	{
+		BoxCollider* box = new BoxCollider;
+		box->Init(this);
+		m_colliders.emplace_back(box);
+		break;
+	}
+	case ColliderShape::COLLIDER_SPHERE:
+	{
+		SphereCollider* sphere = new SphereCollider;
+		sphere->Init(this);
+		m_colliders.emplace_back(sphere);
+		break;
+	}	
+	}
+}
+
+void RigidBody::ApplyFlags()
+{
+	// 연속 충돌 감지 모드를 설정
+	bool continousFlag = m_continuous && !isKinematic();
+	m_body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, continousFlag);
+
+	// 연속 충돌 모드 사용시 마찰을 사용합니다.
+	m_body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, continousFlag);
+
+	// SceneQuery에 현재 오브젝트의 위치가 아닌 Kinematic Traget Transform을 사용
+	m_body->setRigidBodyFlag(PxRigidBodyFlag::eUSE_KINEMATIC_TARGET_FOR_SCENE_QUERIES, true);
 }
 
 void RigidBody::AttachAll()
 {
 	DetachAll();
 
-	std::vector<Collider*> colliders; // gameObj->comp(콜라이더);
-	for (auto collider : colliders)
+	for (auto collider : m_colliders)
 	{
 		Attach(collider);
 	}
@@ -54,6 +91,23 @@ void RigidBody::Detach(Collider* collider)
 	UpdateMassAndInertia();
 }
 
+PxRigidDynamic* RigidBody::GetBody()
+{
+	return m_body;
+}
+
+Collider* RigidBody::GetCollider(int index)
+{
+	if (index >= m_colliders.size())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return m_colliders[index];
+	}
+}
+
 void RigidBody::SetPosition(const float x, const float y, const float z, bool sleep)
 {
 	PxTransform t = m_body->getGlobalPose();
@@ -70,7 +124,7 @@ void RigidBody::SetRotation(float radian, PxVec3 axis)
 
 	float value = t.q.getAngle();
 
-	t.q = PxQuat(value + 10, PxVec3(0.f, 1.f, 0.f));		//axis는 normalized 된 값
+	t.q = PxQuat(value + 10, axis);		//axis는 normalized 된 값
 
 	m_body->setGlobalPose(t);
 }
@@ -78,4 +132,9 @@ void RigidBody::SetRotation(float radian, PxVec3 axis)
 void RigidBody::UpdateMassAndInertia()
 {
 	PxRigidBodyExt::setMassAndUpdateInertia(*m_body, m_body->getMass());
+}
+
+bool RigidBody::isKinematic() const
+{
+	return m_body->getRigidBodyFlags().isSet(PxRigidBodyFlag::eKINEMATIC);
 }

@@ -28,11 +28,20 @@
     <Filter Include="소스 파일\PhysX\Collider">
       <UniqueIdentifier>{b69d61a4-8008-43cc-b5aa-a635cedf820b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Math">
-      <UniqueIdentifier>{7adcc7cd-b0f8-4bb9-9b66-3f4d773851de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\PhysX\Collider\Capsule">
       <UniqueIdentifier>{496d4e2f-28fb-4e2c-a4f6-41d4dc3cb0eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\EventCallback">
+      <UniqueIdentifier>{948564c9-29b1-4275-8d5e-d66dd410768f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\Collider\Box">
+      <UniqueIdentifier>{1fe89b82-937b-486b-ab1f-8de5627e2735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\Collider\Sphere">
+      <UniqueIdentifier>{2ec84790-ab30-458d-bacf-36f8c948589d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\PhysDevice\filterShader">
+      <UniqueIdentifier>{7f212b41-6a05-4193-bf63-d4ac07e9d292}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,17 +66,29 @@
     <ClInclude Include="InputDevice.h">
       <Filter>소스 파일\InputDevice</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBody.h">
-      <Filter>소스 파일\PhysX\RigidBody</Filter>
+    <ClInclude Include="MySimulationEventCallback.h">
+      <Filter>소스 파일\PhysX\EventCallback</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>소스 파일\PhysX\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Vec3.h">
-      <Filter>소스 파일\Math</Filter>
-    </ClInclude>
     <ClInclude Include="CapsuleCollider.h">
       <Filter>소스 파일\PhysX\Collider\Capsule</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>소스 파일\PhysX\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>소스 파일\PhysX\Collider\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>소스 파일\PhysX\Collider\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Client_Defines.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFilterShader.h">
+      <Filter>소스 파일\PhysX\PhysDevice\filterShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -80,17 +101,29 @@
     <ClCompile Include="InputDevice.cpp">
       <Filter>소스 파일\InputDevice</Filter>
     </ClCompile>
+    <ClCompile Include="MySimulationEventCallback.cpp">
+      <Filter>소스 파일\PhysX\EventCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>소스 파일\PhysX\Collider\Capsule</Filter>
+    </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>소스 파일\PhysX\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>소스 파일\PhysX\Collider\Box</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>소스 파일\PhysX\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Vec3.cpp">
-      <Filter>소스 파일\Math</Filter>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>소스 파일\PhysX\Collider\Sphere</Filter>
     </ClCompile>
-    <ClCompile Include="CapsuleCollider.cpp">
-      <Filter>소스 파일\PhysX\Collider\Capsule</Filter>
+    <ClCompile Include="framework.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFilterShader.cpp">
+      <Filter>소스 파일\PhysX\PhysDevice\filterShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
