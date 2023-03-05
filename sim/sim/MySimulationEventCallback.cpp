@@ -12,3 +12,8 @@ void MySimulationEventCallback::onContact(const PxContactPairHeader& pairHeader,
         }
     }
 }
+
+void MySimulationEventCallback::clearVector()
+{
+    m_collidingPairs.clear();
+}

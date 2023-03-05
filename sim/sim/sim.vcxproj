@@ -131,8 +131,10 @@
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="CapsuleCollider.h" />
+    <ClInclude Include="ControllerWrapper.h" />
     <ClInclude Include="Client_Defines.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="ControllerManagerWrapper.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InputDevice.h" />
@@ -148,7 +150,9 @@
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="CapsuleCollider.cpp" />
+    <ClCompile Include="ControllerWrapper.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="ControllerManagerWrapper.cpp" />
     <ClCompile Include="framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>

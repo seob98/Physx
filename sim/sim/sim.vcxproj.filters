@@ -43,6 +43,12 @@
     <Filter Include="소스 파일\PhysX\PhysDevice\filterShader">
       <UniqueIdentifier>{7f212b41-6a05-4193-bf63-d4ac07e9d292}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PhysX\Controller">
+      <UniqueIdentifier>{8f1e7ddd-c4f2-4d41-af07-7e8da2ce70ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\Controller\ControllerManager">
+      <UniqueIdentifier>{f915412a-ca29-4e9e-b65a-ac92fa30f82e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -90,6 +96,12 @@
     <ClInclude Include="MyFilterShader.h">
       <Filter>소스 파일\PhysX\PhysDevice\filterShader</Filter>
     </ClInclude>
+    <ClInclude Include="ControllerWrapper.h">
+      <Filter>소스 파일\PhysX\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerManagerWrapper.h">
+      <Filter>소스 파일\PhysX\Controller\ControllerManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sim.cpp">
@@ -124,6 +136,12 @@
     </ClCompile>
     <ClCompile Include="MyFilterShader.cpp">
       <Filter>소스 파일\PhysX\PhysDevice\filterShader</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerWrapper.cpp">
+      <Filter>소스 파일\PhysX\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerManagerWrapper.cpp">
+      <Filter>소스 파일\PhysX\Controller\ControllerManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

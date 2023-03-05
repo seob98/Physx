@@ -56,12 +56,18 @@ void PhysDevice::Init()
 	m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.6f);
 	PxRigidStatic* groundPlane = PxCreatePlane(*m_Physics, PxPlane(0, 1, 0, 0), *m_Material);
 	m_Scene->addActor(*groundPlane);
+
+	m_controllerManagerWrapper = new ControllerManagerWrapper;
+	m_controllerManagerWrapper->Init();
 }
 
 void PhysDevice::StepSim()
 {
 	m_Scene->simulate(1.0f / PX_SIM_FRAMECNT);
 	m_Scene->fetchResults(true);
+
+	m_eventCallback->clearVector();
+
 }
 
 void PhysDevice::Release()
@@ -94,6 +100,12 @@ PxScene* PhysDevice::GetScene() const
 {
 	return m_Scene;
 }
+
+ControllerManagerWrapper* PhysDevice::GetControllerManagerWrapper() const
+{
+	return m_controllerManagerWrapper;
+}
+
 
 void PhysDevice::CreateHelloWorldStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic)
 {
@@ -169,19 +181,47 @@ void PhysDevice::CreateHelloWorldDynamic(const PxTransform& t, const PxGeometry&
 	rigidDynamics.emplace_back(sample);
 }
 
+void PhysDevice::InitialPlacement()
+{
+	CreateDynamic(ColliderShape::COLLIDER_SPHERE, 20, 20, 20);
+	CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 20, 0);
+
+#pragma region Sphere크기 조정
+	SphereCollider* sphere = dynamic_cast<SphereCollider*>(m_rigidBodies[0]->GetCollider(0));
+	if (sphere == nullptr)
+		return;
+	sphere->SetRadius(2.f);
+
+	PxRigidBody* body = m_rigidBodies[0]->GetBody();
+	body->setAngularDamping(0.00001f);
+	body->setLinearDamping(0.15f);
+	body->setMass(body->getMass() * 0.20f);
+	m_rigidBodies[0]->UpdateMassAndInertia();
+#pragma endregion
+
+#pragma region Box크기 변경
+	BoxCollider* box = dynamic_cast<BoxCollider*>(m_rigidBodies[1]->GetCollider(0));
+	if (box == nullptr)
+		return;
+	box->SetExtents(box->GetExtentX() * 3.f, box->GetExtentX() * 3.f, box->GetExtentX() * 3.f);
+#pragma endregion
+
+	m_controllerManagerWrapper->CreateController();
+}
+
 void PhysDevice::CreateDynamic(ColliderShape shape, float posX, float posY, float posZ)
 {
 	RigidBody* body = new RigidBody();
 	body->Init(shape);
 	body->SetPosition(posX, posY, posZ, true);
-	rigidBodies.emplace_back(body);
+	m_rigidBodies.emplace_back(body);
 }
 
 void PhysDevice::SetLinearVelocity()
 {
 	//velocity을 매 업데이트에 적용하면 일정한 속도로 계속 나아간다. (명령을 내리는 순간 가속도를 해당 값으로 설정)
 
-	PxRigidDynamic* body = rigidBodies[0]->GetBody();
+	PxRigidDynamic* body = m_rigidBodies[0]->GetBody();
 	if (body == nullptr)
 		return;
 
@@ -205,21 +245,21 @@ void PhysDevice::SetGlobalPoseRotation()
 
 	if (InputDevice::GetInstance()->GetKeyDown(Key::R))
 	{
-		PxTransform pose = rigidBodies[0]->GetBody()->getGlobalPose();
+		PxTransform pose = m_rigidBodies[0]->GetBody()->getGlobalPose();
 
 		value += 5.f;
 		pose.q = PxQuat(value, PxVec3(0.f, 1.f, 0.f));		//axis는 normalized 된 값
 
-		rigidBodies[0]->GetBody()->setGlobalPose(pose);
+		m_rigidBodies[0]->GetBody()->setGlobalPose(pose);
 	}
 }
 
 void PhysDevice::AddForce()
 {
-	float moveStrength = 10.f;
+	float moveStrength = 0.05f;
 	float jumpStrength = 3.f;
 
-	PxRigidDynamic* body = rigidBodies[0]->GetBody();
+	PxRigidDynamic* body = m_rigidBodies[0]->GetBody();
 	if (body == nullptr)
 		return;
 
@@ -239,101 +279,9 @@ void PhysDevice::AddForce()
 
 void PhysDevice::SampleUpdate()
 {
-	static once_flag flag;
-	call_once(flag, [&]() {
-		if (rigidDynamics.size() == 0)
-		{
-			SphereCollider* sphere = dynamic_cast<SphereCollider*>(rigidBodies[0]->GetCollider(0));
-			if (sphere == nullptr)
-				return;
-			sphere->SetRadius(2.f);
-
-			PxRigidBody* body = rigidBodies[0]->GetBody();
-			body->setAngularDamping(0.00001f);
-			body->setLinearDamping(0.15f);
-			body->setMass(body->getMass() * 0.20f);
-			rigidBodies[0]->UpdateMassAndInertia();
-
-			BoxCollider* box = dynamic_cast<BoxCollider*>(rigidBodies[1]->GetCollider(0));
-			if (box == nullptr)
-				return;
-			box->SetExtents(box->GetExtentX() * 3.f, box->GetExtentX() * 3.f, box->GetExtentX() * 3.f);
-		}
-		});
-
 	SetGlobalPoseRotation();
 	AddForce();
-
-	PxU32 collisionGroupBox = 1 << 0;		// set the collision group for the box
-	PxU32 collisionMaskBox = 1 << 1;		// set the collision mask for the box
-	PxU32 collisionGroupSphere = 1 << 2;	// set the collision group for the sphere
-	PxU32 collisionMaskSphere = 1 << 3;		// set the collision mask for the sphere
-
-	static once_flag flag2;
-	call_once(flag2, [&]() {
-#pragma region Create Box
-
-	PxBoxGeometry boxGeom(PxVec3(1.0f, 1.0f, 1.0f));
-	PxTransform boxTransform(PxVec3(0.0f, 0.0f, 0.0f));
-	PxRigidDynamic* box = PxCreateDynamic(*PhysDevice::GetInstance()->m_Physics, boxTransform, boxGeom, *PhysDevice::GetInstance()->m_Material, 1.0f);
-	box->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
-	m_Scene->addActor(*box);
-
-	PxShape* boxShape = nullptr;
-	PxU32 numBoxShapes = box->getNbShapes();
-	PxShape** boxShapes = new PxShape * [numBoxShapes];
-	box->getShapes(boxShapes, numBoxShapes);
-	if (numBoxShapes > 0)
-	{
-		boxShape = boxShapes[0];
-	}
-	PxFilterData filterData;
-	filterData.word0 = collisionGroupBox; // set the collision group for the box
-	filterData.word1 = collisionMaskBox; // set the collision mask for the box
-
-	if (boxShape)
-	{
-		boxShape->setSimulationFilterData(filterData); // set the filter data for the box shape
-	}
-
-#pragma endregion Create Box
-
-#pragma region Create sphere
-	PxSphereGeometry sphereGeom(1.0f);
-	PxTransform sphereTransform(PxVec3(-5.0f, 0.0f, 0.0f));
-	PxRigidDynamic* sphere = PxCreateDynamic(*PhysDevice::GetInstance()->m_Physics, sphereTransform, sphereGeom, *PhysDevice::GetInstance()->m_Material, 1.0f);
-	sphere->setLinearVelocity(PxVec3(10.0f, 0.0f, 0.0f));
-	m_Scene->addActor(*sphere);
-
-	PxShape* sphereShape = nullptr;
-	PxU32 numSphereShapes = sphere->getNbShapes();
-	PxShape** sphereShapes = new PxShape * [numSphereShapes];
-	sphere->getShapes(sphereShapes, numSphereShapes);
-	if (numSphereShapes > 0)
-	{
-		sphereShape = sphereShapes[0];
-	}
-
-	filterData.word0 = collisionGroupSphere; // set the collision group for the sphere
-	filterData.word1 = collisionMaskSphere; // set the collision mask for the sphere
-
-	if (sphereShape)
-	{
-		sphereShape->setSimulationFilterData(filterData); // set the filter data for the sphere shape
-	}
-#pragma endregion Create sphere
-
-	sphere->setLinearVelocity(PxVec3(5.f, 0.f, 0.f), true);
-
-	delete[] boxShapes;
-	delete[] sphereShapes;
-		});
-
-	// Check for collisions
-	if (m_eventCallback->m_collidingPairs.size() > 0)
-	{
-		std::cout << "Collision detected!" << std::endl;
-	}
+	m_controllerManagerWrapper->UpdateControllers();
 }
 
 

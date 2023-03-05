@@ -7,8 +7,11 @@
 //physX
 #include "Collider.h"
 #include "RigidBody.h"
+#include "ControllerWrapper.h"
+#include "ControllerManagerWrapper.h"
 #include "MyFilterShader.h"
 #include "MySimulationEventCallback.h"
+
 
 
 

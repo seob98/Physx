@@ -6,6 +6,7 @@ enum class ColliderShape;
 class RigidBody;
 class MySimulationEventCallback;
 class MyFilterShader;
+class ControllerManagerWrapper;
 
 class PhysDevice
 {
@@ -26,12 +27,14 @@ public:
 	PxPhysics* GetPhysics() const;
 	PxMaterial* GetDefaultMaterial() const;
 	PxScene* GetScene() const;
+	ControllerManagerWrapper* GetControllerManagerWrapper() const;
 
 public:
 	//Test용 함수
 	void CreateHelloWorldStack(const PxTransform& t, PxU32 size, PxReal halfExtent, bool attributeStatic);
 	void CreateHelloWorldBox(bool attributeStatic);
 	void CreateHelloWorldDynamic(const PxTransform& t, const PxGeometry& geometry);
+	void InitialPlacement();
 
 	void CreateDynamic(ColliderShape shape, float posX, float posY, float posZ);
 
@@ -40,7 +43,6 @@ public:
 	void AddForce();					//힘 적용
 
 	void SampleUpdate();
-
 private:
 	PxDefaultAllocator		m_Allocator;
 	PxDefaultErrorCallback	m_ErrorCallback;
@@ -54,11 +56,11 @@ private:
 	PxMaterial* m_Material = NULL;
 
 	PxPvd* m_Pvd = NULL;
-	MySimulationEventCallback* m_eventCallback = nullptr;
-	MyFilterShader* m_filterShader = nullptr;
+	MySimulationEventCallback* m_eventCallback		= nullptr;
+	MyFilterShader* m_filterShader					= nullptr;
+	ControllerManagerWrapper* m_controllerManagerWrapper	= nullptr;
 
-
-	vector<RigidBody*>	rigidBodies;
+	vector<RigidBody*>	m_rigidBodies;
 
 	//old
 	vector<PxRigidDynamic*> rigidDynamics;

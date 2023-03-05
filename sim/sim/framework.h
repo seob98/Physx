@@ -17,6 +17,10 @@
 #include <mutex>
 #include <algorithm>
 #include <vector>
+#include <functional>
+#include <utility>
+
+
 using namespace std;
 
 #include <PxPhysicsAPI.h>

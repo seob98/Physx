@@ -49,17 +49,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg{};
 #pragma endregion
     
-    PhysDevice::GetInstance()->Init();
+    auto phys = PhysDevice::GetInstance();
+    phys->Init();
+    phys->InitialPlacement();
 
     PxReal stackZ = 10.0f;
 
 	//for (PxU32 i = 0; i < 5; i++)
 		//phys.CreateStack(PxTransform(PxVec3(0, 0, stackZ -= 10.0f)), 10, 2.0f, true);
-
     //PhysDevice::GetInstance()->CreateHelloWorldBox(true);
     //PhysDevice::GetInstance()->CreateHelloWorldDynamic(PxTransform(PxVec3(0, 40, 100)), PxSphereGeometry(10));
-    PhysDevice::GetInstance()->CreateDynamic(ColliderShape::COLLIDER_SPHERE, 20, 10, 10);
-    PhysDevice::GetInstance()->CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 10, 0);
+
     
     while (msg.message != WM_QUIT)
     {
@@ -74,7 +74,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         // rigidBody 테스트 함수
         PhysDevice::GetInstance()->SampleUpdate();
 
-        for(int i =0; i< (int)PX_SIM_FRAMECNT; ++i)         //physic->step(deltaTime)
+        //for(int i =0; i< (int)PX_SIM_FRAMECNT; ++i)         //physic->step(deltaTime)
             PhysDevice::GetInstance()->StepSim();
 
         InputDevice::GetInstance()->SetUsed();
