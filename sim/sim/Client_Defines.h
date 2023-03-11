@@ -5,6 +5,7 @@
 #include "PhysDevice.h"
 
 //physX
+#include "PhysQuery.h"
 #include "Collider.h"
 #include "RigidBody.h"
 #include "ControllerWrapper.h"

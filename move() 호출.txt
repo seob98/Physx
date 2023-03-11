@@ -1,0 +1,32 @@
+does pxCapsuleController::move() consider the gravity even though its actor is set to kinematic?
+---------------------------------------------------------------------------
+Moving a Character Controller
+The heart of the CCT algorithm is the function that actually moves characters around (PxController::move()):
+
+PxControllerCollisionFlags collisionFlags =
+    PxController::move(const PxVec3& disp, PxF32 minDist, PxF32 elapsedTime,
+    const PxControllerFilters& filters, const PxObstacleContext* obstacles=NULL);
+disp is the displacement vector for current frame. It is typically a combination of vertical motion due to gravity and lateral motion when your character is moving. Note that users are responsible for applying gravity to characters here.
+
+minDist is a minimal length used to stop the recursive displacement algorithm early when remaining distance to travel goes below this limit.
+
+elapsedTime is the amount of time that passed since the last call to the move function.
+
+filters are filtering parameters similar to the ones used in the SDK. Use these to control what the character should collide with.
+
+obstacles are optional additional obstacle objects with which the character should collide. Those objects are fully controlled by users and do not need to have counterpart SDK objects. Note that touched obstacles are cached, meaning that the cache needs to be invalidated if the collection of obstacles changes.
+
+collisionFlags is a bit mask returned to users to define collision events that happened during the move. This is a combination of PxControllerCollisionFlag flags. It can be used to trigger various character animations. For example your character might be falling while playing a falling idle animation, and you might start the land animation as soon as PxControllerCollisionFlag::eCOLLISION_DOWN is returned.
+
+It is important to understand the difference between PxController::move() and PxController::setPosition(). The PxController::move function is the core of the CCT module. This is where the aforementioned ‘collide-and-slide’ algorithm takes place. So the function will start from the CCT’s current position, and use sweep tests to attempt to move in the required direction. If obstacles are found, it may make the CCT slide smoothly against them. Or the CCT can get blocked against a wall: the result of the move call depends on the surrounding geometry. On the contrary, PxController::setPosition is a simple ‘teleport’ function that will relocate the CCT to desired position no matter what, regardless of where the CCT starts from, regardless of surrounding geometry, and even if the required position is in the middle of another object.
+
+doesn't this document say move() consider gravity as well?
+---------------------------------------------------------------------------
+does it mean the document recommends me to use move() downward for intake as gravity, and then use move() again for input movements?
+---------------------------------------------------------------------------
+doesn't recursive algorithm means i have to call it every once an update?
+---------------------------------------------------------------------------
+so you mean, imply the gravity and my inputmovements at once inside the first input of move()?
+---------------------------------------------------------------------------
+show me an example. I'm trying to call move() to make my controller go right and apply gravity at the same time
+---------------------------------------------------------------------------wait, consider I'm implying physx while using c++.

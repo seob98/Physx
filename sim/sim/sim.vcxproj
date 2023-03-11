@@ -141,6 +141,7 @@
     <ClInclude Include="MyFilterShader.h" />
     <ClInclude Include="MySimulationEventCallback.h" />
     <ClInclude Include="PhysDevice.h" />
+    <ClInclude Include="PhysQuery.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="sim.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="MyFilterShader.cpp" />
     <ClCompile Include="MySimulationEventCallback.cpp" />
     <ClCompile Include="PhysDevice.cpp" />
+    <ClCompile Include="PhysQuery.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="sim.cpp" />
     <ClCompile Include="SphereCollider.cpp" />

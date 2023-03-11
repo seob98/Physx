@@ -39,6 +39,7 @@ enum class Interpolate;
 enum class PhysicsAxis;
 enum class ForceMode;
 enum class ColliderShape;
+enum class PhysicsAxis;
 
 class RigidBody
 {
@@ -71,6 +72,7 @@ public:
 	void UpdateMassAndInertia();
 
 public:
+	void SetRotationLockAxis(PhysicsAxis axes, bool value);
 	bool isKinematic() const;
 
 	/*

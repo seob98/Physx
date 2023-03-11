@@ -7,6 +7,7 @@ class RigidBody;
 class MySimulationEventCallback;
 class MyFilterShader;
 class ControllerManagerWrapper;
+class PhysQuery;
 
 class PhysDevice
 {
@@ -28,6 +29,7 @@ public:
 	PxMaterial* GetDefaultMaterial() const;
 	PxScene* GetScene() const;
 	ControllerManagerWrapper* GetControllerManagerWrapper() const;
+	PhysQuery* GetQuery() const;
 
 public:
 	//Test¿ë ÇÔ¼ö
@@ -44,23 +46,27 @@ public:
 
 	void SampleUpdate();
 private:
-	PxDefaultAllocator		m_Allocator;
-	PxDefaultErrorCallback	m_ErrorCallback;
+	PxDefaultAllocator				m_Allocator;
+	PxDefaultErrorCallback			m_ErrorCallback;
 
-	PxFoundation* m_Foundation = NULL;
-	PxPhysics* m_Physics = NULL;
+	PxFoundation*					m_Foundation = NULL;
+	PxPhysics*						m_Physics = NULL;
 
-	PxDefaultCpuDispatcher* m_Dispatcher = NULL;
-	PxScene* m_Scene = NULL;
+	PxDefaultCpuDispatcher*			m_Dispatcher = NULL;
+	PxScene*						m_Scene = NULL;
 
-	PxMaterial* m_Material = NULL;
+	PxMaterial*						m_Material = NULL;
 
 	PxPvd* m_Pvd = NULL;
-	MySimulationEventCallback* m_eventCallback		= nullptr;
-	MyFilterShader* m_filterShader					= nullptr;
-	ControllerManagerWrapper* m_controllerManagerWrapper	= nullptr;
+	MySimulationEventCallback*		m_eventCallback		= nullptr;
+	MyFilterShader*					m_filterShader					= nullptr;
+	ControllerManagerWrapper*		m_controllerManagerWrapper	= nullptr;
+	PhysQuery*						m_query = nullptr;
 
-	vector<RigidBody*>	m_rigidBodies;
+	vector<RigidBody*>				m_rigidBodies;
+
+
+
 
 	//old
 	vector<PxRigidDynamic*> rigidDynamics;

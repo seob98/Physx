@@ -1,10 +1,4 @@
-﻿#ifdef UNICODE
-#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
-#else
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-#endif
-
-#pragma once
+﻿#pragma once
 #include "framework.h"
 #include "sim.h"
 #include "Client_Defines.h"

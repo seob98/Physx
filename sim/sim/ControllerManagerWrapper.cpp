@@ -21,17 +21,17 @@ void ControllerManagerWrapper::CreateController()
     capsuleDesc.height = 4.5f;
     capsuleDesc.radius = 2.0f;
     capsuleDesc.material = phys->GetDefaultMaterial();
-    capsuleDesc.position = PxExtendedVec3(0.f, 10.f, 0.f);
+    capsuleDesc.position = PxExtendedVec3(0.f, 20.f, 0.f);
     capsuleDesc.upDirection = PxVec3(0.0f, 1.0f, 0.0f);
     capsuleDesc.slopeLimit = cosf(PxPi / 3.0f);        //60degress
-    capsuleDesc.contactOffset = 0.1f;
+    capsuleDesc.contactOffset = 0.2f;
     capsuleDesc.stepOffset = 0.1f;
 
     // CreateController + SetFlags
     PxCapsuleController* controller = static_cast<PxCapsuleController*>(m_manager->createController(capsuleDesc));
     PxRigidDynamic* controllerActor = controller->getActor();
     controllerActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
-    controllerActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
+    //controllerActor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, false);
     controller->setNonWalkableMode(PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING);
 
     // Lock the rotation of the actor along the axis perpendicular to the up direction
@@ -40,33 +40,24 @@ void ControllerManagerWrapper::CreateController()
     // WrappingClass
     ControllerWrapper* wrapper = new ControllerWrapper;
     wrapper->SetController(controller);
-    controller->getActor()->userData = static_cast<void*>(wrapper);
+    controllerActor->userData = static_cast<void*>(wrapper);
+    //controller의 멤버변수에 Rigidbody를 넣어서 보관하고, axis고정을 해서 move든 충돌이든 시도
 
     wrapper->SetDensity(1.0f);
+    wrapper->SetRotationLockAxis(PhysicsAxis::All, true);
 
     // Place the controller to the vector
     static int serialNum = 0;
     wrapper->SetSerial(serialNum++);
+    wrapper->Init();
     m_controllerWrappers.emplace_back(wrapper);
 }
 
 void ControllerManagerWrapper::UpdateControllers()
 {
-    //PxVec3 input{};
-
-    //if (InputDevice::GetInstance()->GetKey(Key::Left))
-    //    input.x = -1;
-    //if (InputDevice::GetInstance()->GetKey(Key::Right))
-    //    input.x = 1;
-    //if (InputDevice::GetInstance()->GetKey(Key::Up))
-    //    input.z = 1;
-    //if (InputDevice::GetInstance()->GetKey(Key::Down))
-    //    input.z = -1;
-
     for (auto& wrapper: m_controllerWrappers)
     {
-        PxCapsuleController* controller = wrapper->GetController();
-        controller->setUpDirection(PxVec3(0.f,1.f,0.f));
+        wrapper->Update();
     }
 }
 

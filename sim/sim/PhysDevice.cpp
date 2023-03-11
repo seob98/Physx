@@ -59,6 +59,9 @@ void PhysDevice::Init()
 
 	m_controllerManagerWrapper = new ControllerManagerWrapper;
 	m_controllerManagerWrapper->Init();
+
+	m_query = new PhysQuery;
+	m_query->Init();
 }
 
 void PhysDevice::StepSim()
@@ -104,6 +107,11 @@ PxScene* PhysDevice::GetScene() const
 ControllerManagerWrapper* PhysDevice::GetControllerManagerWrapper() const
 {
 	return m_controllerManagerWrapper;
+}
+
+PhysQuery* PhysDevice::GetQuery() const
+{
+	return m_query;
 }
 
 
@@ -281,6 +289,7 @@ void PhysDevice::SampleUpdate()
 {
 	SetGlobalPoseRotation();
 	AddForce();
+
 	m_controllerManagerWrapper->UpdateControllers();
 }
 

@@ -134,6 +134,12 @@ void RigidBody::UpdateMassAndInertia()
 	PxRigidBodyExt::setMassAndUpdateInertia(*m_body, m_body->getMass());
 }
 
+void RigidBody::SetRotationLockAxis(PhysicsAxis axes, bool value)
+{
+	PxU32 flag = (PxU32)axes << 3;
+	m_body->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::Enum(flag), value);
+}
+
 bool RigidBody::isKinematic() const
 {
 	return m_body->getRigidBodyFlags().isSet(PxRigidBodyFlag::eKINEMATIC);

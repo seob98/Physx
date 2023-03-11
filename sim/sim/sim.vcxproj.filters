@@ -49,6 +49,9 @@
     <Filter Include="소스 파일\PhysX\Controller\ControllerManager">
       <UniqueIdentifier>{f915412a-ca29-4e9e-b65a-ac92fa30f82e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PhysX\PhysDevice\Query">
+      <UniqueIdentifier>{1fdde35d-bcdf-4a8f-be83-ff9da1fbd7db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -102,6 +105,9 @@
     <ClInclude Include="ControllerManagerWrapper.h">
       <Filter>소스 파일\PhysX\Controller\ControllerManager</Filter>
     </ClInclude>
+    <ClInclude Include="PhysQuery.h">
+      <Filter>소스 파일\PhysX\PhysDevice\Query</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sim.cpp">
@@ -142,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="ControllerManagerWrapper.cpp">
       <Filter>소스 파일\PhysX\Controller\ControllerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysQuery.cpp">
+      <Filter>소스 파일\PhysX\PhysDevice\Query</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
