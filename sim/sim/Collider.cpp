@@ -14,10 +14,10 @@ void Collider::Init(RigidBody* body)
 {
 	auto phys = PhysDevice::GetInstance()->GetPhysics();
 	//mat
-	PxMaterial* newMat = phys->createMaterial(0.5f, 0.5f, 0.6f);
-	newMat->setFrictionCombineMode((PxCombineMode::Enum)PhysicsCombineMode::Min);
-	newMat->setRestitutionCombineMode((PxCombineMode::Enum)PhysicsCombineMode::Min);		//apply material flags
-	ManageDuplicateMaterials(newMat);														//check for duplicates														
+	PxMaterial* newMat = phys->createMaterial(1.f, 1.f, 0.f);
+	newMat->setFrictionCombineMode(PxCombineMode::eMIN);
+	newMat->setRestitutionCombineMode(PxCombineMode::eMIN);								//apply material flags
+	ManageDuplicateMaterials(newMat);													//check for duplicates														
 	
 	//shape
 	m_shape = phys->createShape(CreateGeometry().any(), *newMat, true);
@@ -61,21 +61,20 @@ void Collider::ApplyScale()
 
 void Collider::ApplyLayer()
 {
-	//auto device = PhysDevice::GetInstance();
-	////layerMgr 이후 사용
-	//
-	//// 무시할 레이어를 제외한 모든 비트를 켭니다.
-	//uint32_t unignoreBits = ~m_ignoreLayerBits;
+	auto device = PhysDevice::GetInstance();
+	
+	// 무시할 레이어를 제외한 모든 비트를 켭니다.
+	uint32_t unignoreBits = ~m_ignoreLayerBits;
 
-	//PxFilterData filter{};
+	PxFilterData filter{};
 
-	//// 레이어 비트를 켭니다.
-	//filter.word0 = (1 << m_layerIndex);
+	// 레이어 비트를 켭니다.
+	filter.word0 = (1 << m_layerIndex);
 
-	//// 무시하지 않는 비트들을 켭니다.
-	//filter.word1 = unignoreBits;
+	// 무시하지 않는 비트들을 켭니다.
+	filter.word1 = unignoreBits;
 
-	//m_shape->setSimulationFilterData(filter);
+	m_shape->setSimulationFilterData(filter);
 }
 
 bool Collider::CheckIfSameMaterial(PxMaterial* mat1, PxMaterial* mat2)
@@ -121,6 +120,20 @@ void Collider::ResetShape()
 	}
 }
 
+uint8_t Collider::GetLayerIndex() const
+{
+	return m_layerIndex;
+}
+
+void Collider::SetLayerIndex(uint8_t layerIndex)
+{
+	assert(layerIndex < 32);
+
+	m_layerIndex = layerIndex;
+
+	ApplyLayer();
+}
+
 RigidBody* Collider::GetRigidBody() const
 {
 	PxRigidActor* actor = m_shape->getActor();
@@ -128,6 +141,11 @@ RigidBody* Collider::GetRigidBody() const
 		return nullptr;
 
 	return (RigidBody*)actor->userData;
+}
+
+PxShape* Collider::GetPxShape() const
+{
+	return m_shape;
 }
 
 PhysicsCombineMode Collider::GetFrictionCombineMode() const
@@ -149,3 +167,27 @@ void Collider::SetRestitutionCombineMode(PhysicsCombineMode value)
 {
 	m_materials[m_materialIndex]->setRestitutionCombineMode((PxCombineMode::Enum)value);
 }
+
+void Collider::CollectCollisionInfo(EventCallbackInfoType type, shared_ptr<CollisionPairInfo> info)
+{
+	switch (type)
+	{
+	case EventCallbackInfoType::Enter:
+		m_CollisionEnter.emplace_back(info);
+		break;
+	case EventCallbackInfoType::Stay:
+		m_CollisionStay.emplace_back(info);
+		break;
+	case EventCallbackInfoType::Exit:
+		m_CollisionExit.emplace_back(info);
+		break;
+	}
+}
+
+void Collider::ClearCollisionInfo()
+{
+	m_CollisionEnter.clear();
+	m_CollisionStay.clear();
+	m_CollisionExit.clear();
+}
+

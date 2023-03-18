@@ -11,6 +11,9 @@
 
 enum class PhysicsCombineMode;
 enum class ColliderShape;
+enum class EventCallbackInfoType;
+
+class CollisionPairInfo;
 
 class Collider
 {
@@ -36,8 +39,14 @@ protected:
 
 public:
 	// 현재 시뮬레이션 상황 :
-	// shape를 attach하기 전엔 사용 불가. 그래서 현재 Init에는 rigidBody를 인자로 들고 온다. 
+	// shape를 attach하기 전엔 사용 불가. 그래서 현재 Init에는 rigidBody를 인자로 들고 온다.
+
+	// value 0~31
+	uint8_t GetLayerIndex() const;
+	void SetLayerIndex(uint8_t layerIndex);
+
 	RigidBody* GetRigidBody() const;
+	PxShape* GetPxShape() const;
 
 	// 마찰 결합 모드를 반환
 	PhysicsCombineMode GetFrictionCombineMode() const;
@@ -48,6 +57,9 @@ public:
 	// 반발계수 결합 모드를 설정
 	void SetRestitutionCombineMode(PhysicsCombineMode value);
 
+public:
+	void CollectCollisionInfo(EventCallbackInfoType type, shared_ptr<CollisionPairInfo> info);
+	void ClearCollisionInfo();
 
 protected:
 	RigidBody* m_OwnerBody = nullptr;
@@ -65,5 +77,10 @@ protected:
 	float scaleX = 1.f;
 	float scaleY = 1.f;
 	float scaleZ = 1.f;
+
+public:
+	vector<shared_ptr<CollisionPairInfo>> m_CollisionEnter;
+	vector<shared_ptr<CollisionPairInfo>> m_CollisionExit;
+	vector<shared_ptr<CollisionPairInfo>> m_CollisionStay;
 };
 

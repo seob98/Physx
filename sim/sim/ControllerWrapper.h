@@ -13,9 +13,14 @@ public:
 	void Init();
 	void Update();
 public:
-	void Move();
-	void MoveWithNaturalGrav();
+	void MoveSample();
+	void MoveByKinematic();
+	void MoveByNonKinematic();
+
+	void SlopeMovements();
 	void Jump();
+	bool UpdateOnGround(PxRaycastBuffer* buffer);
+	void UpdateKinematic();
 public:
 	void SetController(PxCapsuleController* controller);
 	PxCapsuleController* GetController();
@@ -23,15 +28,19 @@ public:
 	int GetSerial();
 	void SetDensity(float density);
 	float GetDensity();
-	
 public:
 	void SetRotationLockAxis(PhysicsAxis axes, bool value);
-	bool isKinematic() const;
+	bool IsKinematic() const;
+	void SetKinematic(bool value);
 
 private:
 	PxCapsuleController*	m_controller = nullptr;
 	PxRigidDynamic*			m_body = nullptr;
-	int m_serial{};
-	float m_density{};
+
+	float	m_radius{};
+	float	m_halfHeight{};
+
+	int		m_serial{};
+	float	m_density{};
 };
 

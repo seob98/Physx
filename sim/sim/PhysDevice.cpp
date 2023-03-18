@@ -2,7 +2,9 @@
 #include "PhysDevice.h"
 #include "SphereCollider.h"
 #include "BoxCollider.h"
+#include "CapsuleCollider.h"
 #include "MyFilterShader.h"
+#include "Player.h"
 
 ImplementSingletone(PhysDevice);
 
@@ -54,8 +56,8 @@ void PhysDevice::Init()
 #pragma endregion pvd
 
 	m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.6f);
-	PxRigidStatic* groundPlane = PxCreatePlane(*m_Physics, PxPlane(0, 1, 0, 0), *m_Material);
-	m_Scene->addActor(*groundPlane);
+	//PxRigidStatic* groundPlane = PxCreatePlane(*m_Physics, PxPlane(0, 1, 0, 0), *m_Material);
+	//m_Scene->addActor(*groundPlane);
 
 	m_controllerManagerWrapper = new ControllerManagerWrapper;
 	m_controllerManagerWrapper->Init();
@@ -68,10 +70,9 @@ void PhysDevice::StepSim()
 {
 	m_Scene->simulate(1.0f / PX_SIM_FRAMECNT);
 	m_Scene->fetchResults(true);
-
-	m_eventCallback->clearVector();
-
 }
+
+
 
 void PhysDevice::Release()
 {
@@ -135,16 +136,12 @@ void PhysDevice::CreateHelloWorldStack(const PxTransform& t, PxU32 size, PxReal 
 				body->attachShape(*shape);
 				PxRigidBodyExt::updateMassAndInertia(*body, 100.0f);		//dynamic actor 질량 계산에 필요한 요소 : 질량, 관성값, 무게중심(관성축 위치 결정)
 				m_Scene->addActor(*body);									//updateMassAndInertia 등의 도우미 함수를 사용하면 dynamic actor의 질량계산을 쉽게할 수 있다.
-
-				rigidDynamics.emplace_back(body);
 			}
 			else
 			{
 				PxRigidStatic* body = m_Physics->createRigidStatic(t.transform(localTm));
 				body->attachShape(*shape);
 				m_Scene->addActor(*body);
-
-				rigidStatics.emplace_back(body);
 			}
 		}
 	}
@@ -165,71 +162,101 @@ void PhysDevice::CreateHelloWorldBox(bool attributeStatic)
 		body->attachShape(*shape);
 		PxRigidBodyExt::updateMassAndInertia(*body, 100.0f);		//dynamic actor 질량 계산에 필요한 요소 : 질량, 관성값, 무게중심(관성축 위치 결정)
 		m_Scene->addActor(*body);									//updateMassAndInertia 등의 도우미 함수를 사용하면 dynamic actor의 질량계산을 쉽게할 수 있다.
-
-		rigidDynamics.emplace_back(body);
 	}
 	else
 	{
 		PxRigidStatic* body = m_Physics->createRigidStatic(PxTransform(PxVec3(0.f, 10.f, 0.f)));
 		body->attachShape(*shape);
 		m_Scene->addActor(*body);
-
-		rigidStatics.emplace_back(body);
 	}
 	shape->release();
 }
 
 void PhysDevice::CreateHelloWorldDynamic(const PxTransform& t, const PxGeometry& geometry)
 {
-	sample = PxCreateDynamic(*m_Physics, t, geometry, *m_Material, 10.0f);
-	sample->setAngularDamping(0.00001f);			//회전에 대한 저항력
-	sample->setLinearDamping(0.1f);				//이동에 대한 저항력
-	m_Scene->addActor(*sample);
-	
-	rigidDynamics.emplace_back(sample);
+	PxRigidDynamic* dynamic = PxCreateDynamic(*m_Physics, t, geometry, *m_Material, 10.0f);
+	m_Scene->addActor(*dynamic);
 }
 
 void PhysDevice::InitialPlacement()
 {
-	CreateDynamic(ColliderShape::COLLIDER_SPHERE, 20, 20, 20);
-	CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 20, 0);
+	CreateDynamic(ColliderShape::COLLIDER_BOX, 0, 2, 0);				//plane = 0
+	CreateDynamic(ColliderShape::COLLIDER_SPHERE, 20, 20, 20);			//ball = 1
+	CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 11.5, 0);			//box1 = 2
+	CreateDynamic(ColliderShape::COLLIDER_BOX, -10, 10.5, 0);			//box1 = 3
+	m_player = new Player();
+	m_player->Init();
+
+	m_RigidBodies[2]->SetRotation(45.f, PhysicsAxis::Y);
+	m_RigidBodies[3]->SetRotation(-20.f, PhysicsAxis::X);
+
+#pragma region plane 크기 조정
+	RigidBody* planeBody = m_RigidBodies[0];
+	planeBody->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, false);
+	planeBody->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+	planeBody->SetKinematic(true);
+	BoxCollider* plane = dynamic_cast<BoxCollider*>(m_RigidBodies[0]->GetCollider(0));
+	if (plane == nullptr)
+		return;
+	plane->SetExtents(plane->GetExtentX() * 100.f, plane->GetExtentX() * 2.f, plane->GetExtentX() * 100.f);
+
+#pragma endregion
 
 #pragma region Sphere크기 조정
-	SphereCollider* sphere = dynamic_cast<SphereCollider*>(m_rigidBodies[0]->GetCollider(0));
+	SphereCollider* sphere = dynamic_cast<SphereCollider*>(m_RigidBodies[1]->GetCollider(0));
 	if (sphere == nullptr)
 		return;
 	sphere->SetRadius(2.f);
 
-	PxRigidBody* body = m_rigidBodies[0]->GetBody();
+	PxRigidBody* body = m_RigidBodies[1]->GetBody();
 	body->setAngularDamping(0.00001f);
 	body->setLinearDamping(0.15f);
 	body->setMass(body->getMass() * 0.20f);
-	m_rigidBodies[0]->UpdateMassAndInertia();
+	m_RigidBodies[0]->UpdateMassAndInertia();
 #pragma endregion
 
-#pragma region Box크기 변경
-	BoxCollider* box = dynamic_cast<BoxCollider*>(m_rigidBodies[1]->GetCollider(0));
-	if (box == nullptr)
+#pragma region Box1크기 변경
+	RigidBody* box1Body = m_RigidBodies[2];
+	box1Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, false);
+	box1Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+	box1Body->SetKinematic(true);
+	BoxCollider* box1 = dynamic_cast<BoxCollider*>(m_RigidBodies[2]->GetCollider(0));
+	if (box1 == nullptr)
 		return;
-	box->SetExtents(box->GetExtentX() * 3.f, box->GetExtentX() * 3.f, box->GetExtentX() * 3.f);
+	box1->SetExtents(box1->GetExtentX() * 15.f, box1->GetExtentY() * 15.f, box1->GetExtentZ() * 15.f);
 #pragma endregion
 
-	m_controllerManagerWrapper->CreateController();
+#pragma region Box2크기 변경
+	RigidBody* box2Body = m_RigidBodies[3];
+	box2Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, false);
+	box2Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+	box2Body->SetKinematic(true);
+	BoxCollider* box2 = dynamic_cast<BoxCollider*>(m_RigidBodies[3]->GetCollider(0));
+	if (box2 == nullptr)
+		return;
+	box2->SetExtents(box2->GetExtentX() * 10.f, box2->GetExtentY() * 1.f, box2->GetExtentZ() * 10.f);
+	box2->GetPxShape()->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+	box2->GetPxShape()->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+#pragma endregion
+
+	//m_controllerManagerWrapper->CreateController();
 }
 
-void PhysDevice::CreateDynamic(ColliderShape shape, float posX, float posY, float posZ)
+RigidBody* PhysDevice::CreateDynamic(ColliderShape shape, float posX, float posY, float posZ)
 {
 	RigidBody* body = new RigidBody();
 	body->Init(shape);
 	body->SetPosition(posX, posY, posZ, true);
-	m_rigidBodies.emplace_back(body);
+	m_RigidBodies.emplace_back(body);
+
+	return body;
 }
 
 void PhysDevice::SetLinearVelocity()
 {
 	//velocity을 매 업데이트에 적용하면 일정한 속도로 계속 나아간다. (명령을 내리는 순간 가속도를 해당 값으로 설정)
 
-	PxRigidDynamic* body = m_rigidBodies[0]->GetBody();
+	PxRigidDynamic* body = m_RigidBodies[0]->GetBody();
 	if (body == nullptr)
 		return;
 
@@ -253,12 +280,12 @@ void PhysDevice::SetGlobalPoseRotation()
 
 	if (InputDevice::GetInstance()->GetKeyDown(Key::R))
 	{
-		PxTransform pose = m_rigidBodies[0]->GetBody()->getGlobalPose();
+		PxTransform pose = m_RigidBodies[0]->GetBody()->getGlobalPose();
 
 		value += 5.f;
 		pose.q = PxQuat(value, PxVec3(0.f, 1.f, 0.f));		//axis는 normalized 된 값
 
-		m_rigidBodies[0]->GetBody()->setGlobalPose(pose);
+		m_RigidBodies[0]->GetBody()->setGlobalPose(pose);
 	}
 }
 
@@ -267,7 +294,8 @@ void PhysDevice::AddForce()
 	float moveStrength = 0.05f;
 	float jumpStrength = 3.f;
 
-	PxRigidDynamic* body = m_rigidBodies[0]->GetBody();
+	PxRigidDynamic* body = m_RigidBodies[0]->GetBody();
+
 	if (body == nullptr)
 		return;
 
@@ -285,12 +313,22 @@ void PhysDevice::AddForce()
 		body->addForce(PxVec3(0, jumpStrength, 0), PxForceMode::eIMPULSE);
 }
 
-void PhysDevice::SampleUpdate()
-{
-	SetGlobalPoseRotation();
-	AddForce();
 
-	m_controllerManagerWrapper->UpdateControllers();
+void PhysDevice::GameLogic()
+{
+	m_eventCallback->Notify();
+
+	//codeblocks of colliders using the information (move is one of them)
+	m_player->Move();
+
+	for (auto& body : m_RigidBodies)
+	{
+		//currently only 1 collider for each body
+		body->GetCollider(0)->ClearCollisionInfo();
+	}
+
+
+	m_eventCallback->ClearVector();
 }
 
 

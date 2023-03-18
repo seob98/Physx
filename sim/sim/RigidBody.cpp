@@ -2,6 +2,7 @@
 #include "RigidBody.h"
 #include "BoxCollider.h"
 #include "SphereCollider.h"
+#include "CapsuleCollider.h"
 
 void RigidBody::Init(ColliderShape shape)
 {
@@ -33,6 +34,13 @@ void RigidBody::Init(ColliderShape shape)
 		m_colliders.emplace_back(sphere);
 		break;
 	}	
+	case ColliderShape::COLLIDER_CAPSULE:
+	{
+		CapsuleCollider* capsule = new CapsuleCollider;
+		capsule->Init(this);
+		m_colliders.emplace_back(capsule);
+		break;
+	}
 	}
 }
 
@@ -108,6 +116,11 @@ Collider* RigidBody::GetCollider(int index)
 	}
 }
 
+PxVec3 RigidBody::GetPosition()
+{
+	return m_body->getGlobalPose().p;
+}
+
 void RigidBody::SetPosition(const float x, const float y, const float z, bool sleep)
 {
 	PxTransform t = m_body->getGlobalPose();
@@ -118,15 +131,44 @@ void RigidBody::SetPosition(const float x, const float y, const float z, bool sl
 	m_body->setGlobalPose(t, sleep);
 }
 
-void RigidBody::SetRotation(float radian, PxVec3 axis)
+void RigidBody::SetRotation(float degrees, PhysicsAxis axis)
 {
-	PxTransform t = m_body->getGlobalPose();
+	// Get the current rotation of the rigid dynamic object
+	PxTransform currentPose = m_body->getGlobalPose();
 
-	float value = t.q.getAngle();
+	// convert degree->radian
+	float radians = PxPi * degrees / 180.0f;
+	
 
-	t.q = PxQuat(value + 10, axis);		//axis는 normalized 된 값
+	//quaternion representing rotation around axis
+	PxQuat rotation(radians, PxVec3(0.f, 0.f, 0.f));
+	switch (axis)
+	{
+	case PhysicsAxis::X:
+		rotation = PxQuat(radians, PxVec3(1.f, 0.f, 0.f));
+		break;
+	case PhysicsAxis::Y:
+		rotation = PxQuat(radians, PxVec3(0.f, 1.f, 0.f));
+		break;
+	case PhysicsAxis::Z:
+		rotation = PxQuat(radians, PxVec3(0.f, 0.f, 1.f));
+		break;
+	}
+	currentPose.q = rotation;
+	currentPose.q.normalize();  // ensure the quaternion is normalized
+	m_body->setGlobalPose(currentPose);
 
-	m_body->setGlobalPose(t);
+#pragma region 혹시 몰라서 남겨둔다
+	//Get the current rotation of the rigid dynamic object
+	//PxTransform currentPose = m_body->getGlobalPose();
+
+	//static float angle = 90.f;
+	////angle += 0.1f;
+
+	//float radian = PxPi * angle / 180.0f;
+	//currentPose.q = PxQuat(radian, PxVec3(0.f,0.f,1.f));
+	//m_body->setGlobalPose(currentPose);
+#pragma endregion
 }
 
 void RigidBody::UpdateMassAndInertia()
@@ -138,6 +180,11 @@ void RigidBody::SetRotationLockAxis(PhysicsAxis axes, bool value)
 {
 	PxU32 flag = (PxU32)axes << 3;
 	m_body->setRigidDynamicLockFlag(PxRigidDynamicLockFlag::Enum(flag), value);
+}
+
+void RigidBody::SetKinematic(bool value)
+{
+	m_body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, value);
 }
 
 bool RigidBody::isKinematic() const

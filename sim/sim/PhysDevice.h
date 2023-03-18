@@ -8,6 +8,7 @@ class MySimulationEventCallback;
 class MyFilterShader;
 class ControllerManagerWrapper;
 class PhysQuery;
+class Player;
 
 class PhysDevice
 {
@@ -38,13 +39,13 @@ public:
 	void CreateHelloWorldDynamic(const PxTransform& t, const PxGeometry& geometry);
 	void InitialPlacement();
 
-	void CreateDynamic(ColliderShape shape, float posX, float posY, float posZ);
+	RigidBody* CreateDynamic(ColliderShape shape, float posX, float posY, float posZ);
 
 	void SetLinearVelocity();			//가속도 설정
 	void SetGlobalPoseRotation();		//각도 변경
 	void AddForce();					//힘 적용
 
-	void SampleUpdate();
+	void GameLogic();
 private:
 	PxDefaultAllocator				m_Allocator;
 	PxDefaultErrorCallback			m_ErrorCallback;
@@ -63,14 +64,8 @@ private:
 	ControllerManagerWrapper*		m_controllerManagerWrapper	= nullptr;
 	PhysQuery*						m_query = nullptr;
 
-	vector<RigidBody*>				m_rigidBodies;
+	vector<RigidBody*>				m_RigidBodies;
 
-
-
-
-	//old
-	vector<PxRigidDynamic*> rigidDynamics;
-	vector<PxRigidStatic*> rigidStatics;
-	PxRigidDynamic* sample = nullptr;
+	Player*							m_player;
 };
 

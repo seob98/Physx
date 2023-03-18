@@ -40,9 +40,6 @@
     <Filter Include="소스 파일\PhysX\Collider\Sphere">
       <UniqueIdentifier>{2ec84790-ab30-458d-bacf-36f8c948589d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\PhysX\PhysDevice\filterShader">
-      <UniqueIdentifier>{7f212b41-6a05-4193-bf63-d4ac07e9d292}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\PhysX\Controller">
       <UniqueIdentifier>{8f1e7ddd-c4f2-4d41-af07-7e8da2ce70ec}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,21 @@
     </Filter>
     <Filter Include="소스 파일\PhysX\PhysDevice\Query">
       <UniqueIdentifier>{1fdde35d-bcdf-4a8f-be83-ff9da1fbd7db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Player">
+      <UniqueIdentifier>{020e1a6b-92b5-48e9-b062-5af70da55160}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\PhysDevice\FilterCallback">
+      <UniqueIdentifier>{2e7c4f3f-e2a5-414d-b56e-03e9da49ed3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\PhysDevice\FilterShader">
+      <UniqueIdentifier>{7f212b41-6a05-4193-bf63-d4ac07e9d292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\PhysDevice\Query\RayCastElements">
+      <UniqueIdentifier>{2aa80a60-bd63-4633-b14a-edfa239b968e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\PhysX\EventCallback\CollisionInfo">
+      <UniqueIdentifier>{946016f4-f5ad-4713-9a47-bfcd9c454619}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +109,7 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="MyFilterShader.h">
-      <Filter>소스 파일\PhysX\PhysDevice\filterShader</Filter>
+      <Filter>소스 파일\PhysX\PhysDevice\FilterShader</Filter>
     </ClInclude>
     <ClInclude Include="ControllerWrapper.h">
       <Filter>소스 파일\PhysX\Controller</Filter>
@@ -107,6 +119,21 @@
     </ClInclude>
     <ClInclude Include="PhysQuery.h">
       <Filter>소스 파일\PhysX\PhysDevice\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomQueryFilterCallback.h">
+      <Filter>소스 파일\PhysX\PhysDevice\FilterCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsRay.h">
+      <Filter>소스 파일\PhysX\PhysDevice\Query\RayCastElements</Filter>
+    </ClInclude>
+    <ClInclude Include="RaycastHit.h">
+      <Filter>소스 파일\PhysX\PhysDevice\Query\RayCastElements</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionPairInfo.h">
+      <Filter>소스 파일\PhysX\EventCallback\CollisionInfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -141,7 +168,7 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MyFilterShader.cpp">
-      <Filter>소스 파일\PhysX\PhysDevice\filterShader</Filter>
+      <Filter>소스 파일\PhysX\PhysDevice\FilterShader</Filter>
     </ClCompile>
     <ClCompile Include="ControllerWrapper.cpp">
       <Filter>소스 파일\PhysX\Controller</Filter>
@@ -151,6 +178,21 @@
     </ClCompile>
     <ClCompile Include="PhysQuery.cpp">
       <Filter>소스 파일\PhysX\PhysDevice\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomQueryFilterCallback.cpp">
+      <Filter>소스 파일\PhysX\PhysDevice\FilterCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsRay.cpp">
+      <Filter>소스 파일\PhysX\PhysDevice\Query\RayCastElements</Filter>
+    </ClCompile>
+    <ClCompile Include="RaycastHit.cpp">
+      <Filter>소스 파일\PhysX\PhysDevice\Query\RayCastElements</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionPairInfo.cpp">
+      <Filter>소스 파일\PhysX\EventCallback\CollisionInfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

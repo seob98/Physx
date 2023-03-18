@@ -20,6 +20,16 @@ float BoxCollider::GetExtentX()
 	return m_extentX;
 }
 
+float BoxCollider::GetExtentY()
+{
+	return m_extentY;
+}
+
+float BoxCollider::GetExtentZ()
+{
+	return m_extentZ;
+}
+
 void BoxCollider::SetExtents(float extentX, float extentY, float extentZ)
 {
 	m_extentX = extentX;

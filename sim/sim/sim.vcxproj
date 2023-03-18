@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="CapsuleCollider.h" />
+    <ClInclude Include="CollisionPairInfo.h" />
     <ClInclude Include="ControllerWrapper.h" />
     <ClInclude Include="Client_Defines.h" />
     <ClInclude Include="Collider.h" />
@@ -141,7 +142,11 @@
     <ClInclude Include="MyFilterShader.h" />
     <ClInclude Include="MySimulationEventCallback.h" />
     <ClInclude Include="PhysDevice.h" />
+    <ClInclude Include="PhysicsRay.h" />
     <ClInclude Include="PhysQuery.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="CustomQueryFilterCallback.h" />
+    <ClInclude Include="RaycastHit.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="sim.h" />
@@ -151,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="CapsuleCollider.cpp" />
+    <ClCompile Include="CollisionPairInfo.cpp" />
     <ClCompile Include="ControllerWrapper.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ControllerManagerWrapper.cpp" />
@@ -161,7 +167,11 @@
     <ClCompile Include="MyFilterShader.cpp" />
     <ClCompile Include="MySimulationEventCallback.cpp" />
     <ClCompile Include="PhysDevice.cpp" />
+    <ClCompile Include="PhysicsRay.cpp" />
     <ClCompile Include="PhysQuery.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="CustomQueryFilterCallback.cpp" />
+    <ClCompile Include="RaycastHit.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="sim.cpp" />
     <ClCompile Include="SphereCollider.cpp" />

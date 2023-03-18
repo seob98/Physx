@@ -5,16 +5,19 @@
 #include "PhysDevice.h"
 
 //physX
+#include "PhysicsRay.h"
+#include "RaycastHit.h"
 #include "PhysQuery.h"
 #include "Collider.h"
 #include "RigidBody.h"
 #include "ControllerWrapper.h"
 #include "ControllerManagerWrapper.h"
 #include "MyFilterShader.h"
+#include "CustomQueryFilterCallback.h"		//RaycasteventCallback
 #include "MySimulationEventCallback.h"
+#include "CollisionPairInfo.h"
 
-
-
+#include "Player.h"
 
 //physx collider
 enum class PhysicsCombineMode
@@ -64,4 +67,25 @@ enum class ForceMode
 	Force = PxForceMode::eFORCE,
 	Acceleration = PxForceMode::eACCELERATION,
 	Velocity = PxForceMode::eVELOCITY_CHANGE,
+};
+
+enum class PhysicsQueryType
+{
+	None = 0,
+	Collider = 1 << 0,
+	Trigger = 1 << 1,
+	All = Collider | Trigger,
+};
+
+enum class PhysicsLayers
+{
+	Map = 0,
+	Player = 1
+};
+
+enum class EventCallbackInfoType
+{
+	Enter = 0,
+	Stay = 1,
+	Exit = 2
 };

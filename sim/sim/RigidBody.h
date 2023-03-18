@@ -39,7 +39,6 @@ enum class Interpolate;
 enum class PhysicsAxis;
 enum class ForceMode;
 enum class ColliderShape;
-enum class PhysicsAxis;
 
 class RigidBody
 {
@@ -61,18 +60,19 @@ public:
 
 public:
 	// 프레임워크 구현되는대로 맞게 인자 수정
+	PxVec3 GetPosition();
 	void SetPosition(const float x, const float y, const float z, bool sleep);
 	
 	//쿼터니언 구현 후 작업
 	//void SetRotation(Quat& rotation);
 
-	void SetRotation(float radian, PxVec3 axis);
-
+	void SetRotation(float degree, PhysicsAxis axis);
 public:
 	void UpdateMassAndInertia();
 
 public:
 	void SetRotationLockAxis(PhysicsAxis axes, bool value);
+	void SetKinematic(bool value);
 	bool isKinematic() const;
 
 	/*
@@ -118,11 +118,5 @@ private:
 	bool m_continuous{true};
 
 	vector<Collider*> m_colliders;
-
-	//bool m_continous = false;
-
-	//class RigibdoyInterpolateBase* m_currentInterpolate = nullptr;
-	//class RigidbodyInterpolater* m_interpolationer = nullptr;
-	//class RigidbodyExtrapolater* m_extrapolater = nullptr;
 };
 

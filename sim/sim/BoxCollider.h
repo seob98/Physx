@@ -14,6 +14,8 @@ public:
 public:
 
 	float GetExtentX();
+	float GetExtentY();
+	float GetExtentZ();
 	void SetExtents(float extentX, float extentY, float extentZ);
 
 private:

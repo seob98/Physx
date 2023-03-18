@@ -1,6 +1,8 @@
 #pragma once
 #include "Client_Defines.h"
 
+class CollisionPairInfo;
+
 class MySimulationEventCallback : public PxSimulationEventCallback
 {
 public:
@@ -18,9 +20,12 @@ public:
 	virtual void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs) override;
 
 public:
-    void clearVector();
+    void Notify();
+    void ClearVector();
 
 public:
-    vector<pair<PxRigidActor*, PxRigidActor*>> m_collidingPairs;
+    vector<shared_ptr<CollisionPairInfo>> m_CollisionEnter;
+    vector<shared_ptr<CollisionPairInfo>> m_CollisionStay;
+    vector<shared_ptr<CollisionPairInfo>> m_CollisionExit;
 };
 

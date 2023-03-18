@@ -21,10 +21,10 @@ void ControllerManagerWrapper::CreateController()
     capsuleDesc.height = 4.5f;
     capsuleDesc.radius = 2.0f;
     capsuleDesc.material = phys->GetDefaultMaterial();
-    capsuleDesc.position = PxExtendedVec3(0.f, 20.f, 0.f);
+    capsuleDesc.position = PxExtendedVec3(0.f, 35.f, 0.f);
     capsuleDesc.upDirection = PxVec3(0.0f, 1.0f, 0.0f);
     capsuleDesc.slopeLimit = cosf(PxPi / 3.0f);        //60degress
-    capsuleDesc.contactOffset = 0.2f;
+    capsuleDesc.contactOffset = 0.001f;
     capsuleDesc.stepOffset = 0.1f;
 
     // CreateController + SetFlags

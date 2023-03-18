@@ -66,10 +66,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         
 #pragma region Loop
         // rigidBody 테스트 함수
-        PhysDevice::GetInstance()->SampleUpdate();
+        PhysDevice::GetInstance()->GameLogic();
 
-        //for(int i =0; i< (int)PX_SIM_FRAMECNT; ++i)         //physic->step(deltaTime)
-            PhysDevice::GetInstance()->StepSim();
+        PhysDevice::GetInstance()->StepSim();
 
         InputDevice::GetInstance()->SetUsed();
     }
