@@ -83,7 +83,7 @@ enum class PhysicsLayers
 	Player = 1
 };
 
-enum class EventCallbackInfoType
+enum class CollisionInfoType
 {
 	Enter = 0,
 	Stay = 1,

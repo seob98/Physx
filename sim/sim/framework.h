@@ -27,6 +27,7 @@
 #include <utility>
 #include <iomanip>
 #include <assert.h>
+#include <cmath>
 
 using namespace std;
 

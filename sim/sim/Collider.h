@@ -11,7 +11,7 @@
 
 enum class PhysicsCombineMode;
 enum class ColliderShape;
-enum class EventCallbackInfoType;
+enum class CollisionInfoType;
 
 class CollisionPairInfo;
 
@@ -30,8 +30,11 @@ public:
 	void ApplyScale();
 	void ApplyLayer();
 
+
+#pragma region oldMatManagementFunctions
 	bool CheckIfSameMaterial(PxMaterial* mat1, PxMaterial* mat2);
 	void ManageDuplicateMaterials(PxMaterial*& newMat);
+#pragma endregion
 
 protected:
 	virtual PxGeometryHolder CreateGeometry() = 0;
@@ -48,26 +51,33 @@ public:
 	RigidBody* GetRigidBody() const;
 	PxShape* GetPxShape() const;
 
-	// 마찰 결합 모드를 반환
+	float GetFriction(float value) const;
+	void SetFriction(float value);
+
+	//FrictionFlag
 	PhysicsCombineMode GetFrictionCombineMode() const;
-	// 마찰 결합 모드를 설정
 	void SetFrictionCombineMode(PhysicsCombineMode value);
-	// 반발계수 결합 모드를 반환
+	//RestitutionFlag
 	PhysicsCombineMode GetRestitutionCombineMode() const;
-	// 반발계수 결합 모드를 설정
 	void SetRestitutionCombineMode(PhysicsCombineMode value);
 
 public:
-	void CollectCollisionInfo(EventCallbackInfoType type, shared_ptr<CollisionPairInfo> info);
+	void CollectCollisionInfo(CollisionInfoType type, shared_ptr<CollisionPairInfo> info);
 	void ClearCollisionInfo();
+	const vector<shared_ptr<CollisionPairInfo>>& GetCollisionInfo(CollisionInfoType type) const;
 
 protected:
 	RigidBody* m_OwnerBody = nullptr;
 
+#pragma region oldMatVariables
+
 	int m_materialIndex;
 	vector<PxMaterial*> m_materials;
-	PxShape* m_shape = nullptr;
 
+#pragma endregion
+
+	PxMaterial* m_material = nullptr;
+	PxShape* m_shape = nullptr;
 
 	bool m_isTrigger = false;
 	uint8_t m_layerIndex = 0;

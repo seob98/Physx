@@ -171,9 +171,62 @@ void RigidBody::SetRotation(float degrees, PhysicsAxis axis)
 #pragma endregion
 }
 
+
+
+PxVec3 RigidBody::GetVelocity() const
+{
+	return m_body->getLinearVelocity();
+}
+
+void RigidBody::SetVelocity(const PxVec3& velocity)
+{
+	if (isKinematic())
+	{
+		return;
+	}
+
+	m_body->setLinearVelocity(velocity);
+}
+
+float RigidBody::GetMass() const
+{
+	return m_body->getMass();
+}
+
+void RigidBody::SetMass(float value)
+{
+	m_body->setMass(value);
+}
+
 void RigidBody::UpdateMassAndInertia()
 {
 	PxRigidBodyExt::setMassAndUpdateInertia(*m_body, m_body->getMass());
+}
+
+bool RigidBody::IsRigidbodySleep() const
+{
+	return m_body->isSleeping();
+}
+
+void RigidBody::SetRigidbodySleep(bool value)
+{
+	if (isKinematic())
+	{
+		return;
+	}
+
+	if (!value) m_body->wakeUp();
+	else		m_body->putToSleep();
+}
+
+float RigidBody::GetSleepThresholder() const
+{
+	return m_body->getSleepThreshold();
+}
+
+void RigidBody::SetSleepThresholder(float value)
+{
+	m_body->setSleepThreshold(value);
 }
 
 void RigidBody::SetRotationLockAxis(PhysicsAxis axes, bool value)
@@ -185,6 +238,12 @@ void RigidBody::SetRotationLockAxis(PhysicsAxis axes, bool value)
 void RigidBody::SetKinematic(bool value)
 {
 	m_body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, value);
+}
+
+void RigidBody::SetCCDFlag(bool value)
+{
+	m_body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, value);
+	m_body->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, value);
 }
 
 bool RigidBody::isKinematic() const

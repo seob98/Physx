@@ -13,14 +13,18 @@ Collider::~Collider()
 void Collider::Init(RigidBody* body)
 {
 	auto phys = PhysDevice::GetInstance()->GetPhysics();
-	//mat
-	PxMaterial* newMat = phys->createMaterial(1.f, 1.f, 0.f);
-	newMat->setFrictionCombineMode(PxCombineMode::eMIN);
-	newMat->setRestitutionCombineMode(PxCombineMode::eMIN);								//apply material flags
-	ManageDuplicateMaterials(newMat);													//check for duplicates														
 	
+#pragma region oldMatManagement
+	//PxMaterial* newMat = phys->createMaterial(1.f, 1.f, 0.f);
+	//newMat->setFrictionCombineMode(PxCombineMode::eMIN);
+	//newMat->setRestitutionCombineMode(PxCombineMode::eMIN);			//apply material flags
+	//ManageDuplicateMaterials(newMat);								//check for duplicates														
+#pragma endregion
+
+	m_material = phys->createMaterial(1.f, 1.f, 0.f);
+
 	//shape
-	m_shape = phys->createShape(CreateGeometry().any(), *newMat, true);
+	m_shape = phys->createShape(CreateGeometry().any(), *m_material, true);
 	m_shape->userData = this;
 
 	m_OwnerBody = body;
@@ -148,6 +152,17 @@ PxShape* Collider::GetPxShape() const
 	return m_shape;
 }
 
+float Collider::GetFriction(float value) const
+{
+	return m_material->getDynamicFriction();
+}
+
+void Collider::SetFriction(float value)
+{
+	m_material->setStaticFriction(value);
+	m_material->setDynamicFriction(value);
+}
+
 PhysicsCombineMode Collider::GetFrictionCombineMode() const
 {
 	return (PhysicsCombineMode)m_materials[m_materialIndex]->getFrictionCombineMode();
@@ -168,17 +183,17 @@ void Collider::SetRestitutionCombineMode(PhysicsCombineMode value)
 	m_materials[m_materialIndex]->setRestitutionCombineMode((PxCombineMode::Enum)value);
 }
 
-void Collider::CollectCollisionInfo(EventCallbackInfoType type, shared_ptr<CollisionPairInfo> info)
+void Collider::CollectCollisionInfo(CollisionInfoType type, shared_ptr<CollisionPairInfo> info)
 {
 	switch (type)
 	{
-	case EventCallbackInfoType::Enter:
+	case CollisionInfoType::Enter:
 		m_CollisionEnter.emplace_back(info);
 		break;
-	case EventCallbackInfoType::Stay:
+	case CollisionInfoType::Stay:
 		m_CollisionStay.emplace_back(info);
 		break;
-	case EventCallbackInfoType::Exit:
+	case CollisionInfoType::Exit:
 		m_CollisionExit.emplace_back(info);
 		break;
 	}
@@ -190,4 +205,19 @@ void Collider::ClearCollisionInfo()
 	m_CollisionStay.clear();
 	m_CollisionExit.clear();
 }
+
+const vector<shared_ptr<CollisionPairInfo>>& Collider::GetCollisionInfo(CollisionInfoType type) const
+{
+	switch (type)
+	{
+	case CollisionInfoType::Enter:
+		return m_CollisionEnter;
+	case CollisionInfoType::Stay:
+		return m_CollisionStay;
+	case CollisionInfoType::Exit:
+		return m_CollisionExit;
+	}
+}
+
+
 

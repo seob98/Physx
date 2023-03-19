@@ -72,8 +72,6 @@ void PhysDevice::StepSim()
 	m_Scene->fetchResults(true);
 }
 
-
-
 void PhysDevice::Release()
 {
 	PX_RELEASE(m_Scene);
@@ -188,12 +186,11 @@ void PhysDevice::InitialPlacement()
 	m_player->Init();
 
 	m_RigidBodies[2]->SetRotation(45.f, PhysicsAxis::Y);
-	m_RigidBodies[3]->SetRotation(-20.f, PhysicsAxis::X);
+	m_RigidBodies[3]->SetRotation(-45.f, PhysicsAxis::X);
 
 #pragma region plane 크기 조정
 	RigidBody* planeBody = m_RigidBodies[0];
-	planeBody->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, false);
-	planeBody->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+	planeBody->SetCCDFlag(false);
 	planeBody->SetKinematic(true);
 	BoxCollider* plane = dynamic_cast<BoxCollider*>(m_RigidBodies[0]->GetCollider(0));
 	if (plane == nullptr)
@@ -217,8 +214,7 @@ void PhysDevice::InitialPlacement()
 
 #pragma region Box1크기 변경
 	RigidBody* box1Body = m_RigidBodies[2];
-	box1Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, false);
-	box1Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+	box1Body->SetCCDFlag(false);
 	box1Body->SetKinematic(true);
 	BoxCollider* box1 = dynamic_cast<BoxCollider*>(m_RigidBodies[2]->GetCollider(0));
 	if (box1 == nullptr)
@@ -228,15 +224,14 @@ void PhysDevice::InitialPlacement()
 
 #pragma region Box2크기 변경
 	RigidBody* box2Body = m_RigidBodies[3];
-	box2Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, false);
-	box2Body->GetBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
+	box2Body->SetCCDFlag(false);
 	box2Body->SetKinematic(true);
 	BoxCollider* box2 = dynamic_cast<BoxCollider*>(m_RigidBodies[3]->GetCollider(0));
 	if (box2 == nullptr)
 		return;
 	box2->SetExtents(box2->GetExtentX() * 10.f, box2->GetExtentY() * 1.f, box2->GetExtentZ() * 10.f);
-	box2->GetPxShape()->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
-	box2->GetPxShape()->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	//box2->GetPxShape()->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+	//box2->GetPxShape()->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 #pragma endregion
 
 	//m_controllerManagerWrapper->CreateController();
@@ -319,14 +314,13 @@ void PhysDevice::GameLogic()
 	m_eventCallback->Notify();
 
 	//codeblocks of colliders using the information (move is one of them)
-	m_player->Move();
+	m_player->Update();
 
 	for (auto& body : m_RigidBodies)
 	{
 		//currently only 1 collider for each body
 		body->GetCollider(0)->ClearCollisionInfo();
 	}
-
 
 	m_eventCallback->ClearVector();
 }

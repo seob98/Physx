@@ -35,17 +35,17 @@ void MySimulationEventCallback::Notify()
     for (auto& info : m_CollisionEnter)
     {
         Collider* to = info.get()->GetToCollider();
-        to->CollectCollisionInfo(EventCallbackInfoType::Enter, info);
+        to->CollectCollisionInfo(CollisionInfoType::Enter, info);
     }
     for (auto& info : m_CollisionStay)
     {
         Collider* to = info.get()->GetToCollider();
-        to->CollectCollisionInfo(EventCallbackInfoType::Stay, info);
+        to->CollectCollisionInfo(CollisionInfoType::Stay, info);
     }
     for (auto& info : m_CollisionExit)
     {
         Collider* to = info.get()->GetToCollider();
-        to->CollectCollisionInfo(EventCallbackInfoType::Exit, info);
+        to->CollectCollisionInfo(CollisionInfoType::Exit, info);
     }
 }
 

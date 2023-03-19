@@ -62,17 +62,24 @@ public:
 	// 프레임워크 구현되는대로 맞게 인자 수정
 	PxVec3 GetPosition();
 	void SetPosition(const float x, const float y, const float z, bool sleep);
-	
-	//쿼터니언 구현 후 작업
-	//void SetRotation(Quat& rotation);
-
 	void SetRotation(float degree, PhysicsAxis axis);
+
+
+	PxVec3 GetVelocity() const;
+	void SetVelocity(const PxVec3& velocity);
+	float GetMass() const;
+	void SetMass(float value);
 public:
 	void UpdateMassAndInertia();
+	bool IsRigidbodySleep() const;
+	void SetRigidbodySleep(bool value);
+	float GetSleepThresholder() const;
+	void SetSleepThresholder(float value);
 
 public:
 	void SetRotationLockAxis(PhysicsAxis axes, bool value);
 	void SetKinematic(bool value);
+	void SetCCDFlag(bool value);
 	bool isKinematic() const;
 
 	/*
