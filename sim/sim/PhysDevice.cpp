@@ -180,8 +180,8 @@ void PhysDevice::InitialPlacement()
 {
 	CreateDynamic(ColliderShape::COLLIDER_BOX, 0, 2, 0);				//plane = 0
 	CreateDynamic(ColliderShape::COLLIDER_SPHERE, 20, 20, 20);			//ball = 1
-	CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 11.5, 0);			//box1 = 2
-	CreateDynamic(ColliderShape::COLLIDER_BOX, -10, 10.5, 0);			//box1 = 3
+	CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 9.5, 0);			//box1 = 2
+	CreateDynamic(ColliderShape::COLLIDER_BOX, 10, 5.5, 0);				//box1 = 3
 	m_player = new Player();
 	m_player->Init();
 
@@ -315,7 +315,7 @@ void PhysDevice::GameLogic()
 
 	//codeblocks of colliders using the information (move is one of them)
 	m_player->Update();
-
+	m_controllerManagerWrapper->UpdateControllers();
 	for (auto& body : m_RigidBodies)
 	{
 		//currently only 1 collider for each body

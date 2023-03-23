@@ -102,7 +102,7 @@ void ControllerWrapper::MoveSample()
         float fallingSpeed = maxFallingSpeed * (1.0f - exp(-t * t * 4.0f));             // modify 4 for slower/qucker falling speed
 
         gravity.y = -fallingSpeed;
-        cout << fallingSpeed << endl;
+        //cout << fallingSpeed << endl;
     }
 
 

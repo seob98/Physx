@@ -13,7 +13,7 @@ Collider::~Collider()
 void Collider::Init(RigidBody* body)
 {
 	auto phys = PhysDevice::GetInstance()->GetPhysics();
-	
+
 #pragma region oldMatManagement
 	//PxMaterial* newMat = phys->createMaterial(1.f, 1.f, 0.f);
 	//newMat->setFrictionCombineMode(PxCombineMode::eMIN);
@@ -22,6 +22,8 @@ void Collider::Init(RigidBody* body)
 #pragma endregion
 
 	m_material = phys->createMaterial(1.f, 1.f, 0.f);
+	m_material->setFlag(PxMaterialFlag::eDISABLE_FRICTION, false);
+	m_material->setFlag(PxMaterialFlag::eDISABLE_STRONG_FRICTION, false);
 
 	//shape
 	m_shape = phys->createShape(CreateGeometry().any(), *m_material, true);
@@ -33,6 +35,9 @@ void Collider::Init(RigidBody* body)
 	ApplyShapeFlags();
 	ApplyTransform();
 	ApplyLayer();
+
+	SetFrictionCombineMode(PhysicsCombineMode::Min);
+	SetRestitutionCombineMode(PhysicsCombineMode::Min);
 }
 
 void Collider::ApplyShapeFlags()
@@ -165,22 +170,27 @@ void Collider::SetFriction(float value)
 
 PhysicsCombineMode Collider::GetFrictionCombineMode() const
 {
-	return (PhysicsCombineMode)m_materials[m_materialIndex]->getFrictionCombineMode();
+	return (PhysicsCombineMode)m_material->getFrictionCombineMode();
 }
 
 void Collider::SetFrictionCombineMode(PhysicsCombineMode value)
 {
-	m_materials[m_materialIndex]->setFrictionCombineMode((PxCombineMode::Enum)value);
+	m_material->setFrictionCombineMode((PxCombineMode::Enum)value);
 }
 
 PhysicsCombineMode Collider::GetRestitutionCombineMode() const
 {
-	return (PhysicsCombineMode)m_materials[m_materialIndex]->getRestitutionCombineMode();
+	return (PhysicsCombineMode)m_material->getRestitutionCombineMode();
 }
 
 void Collider::SetRestitutionCombineMode(PhysicsCombineMode value)
 {
-	m_materials[m_materialIndex]->setRestitutionCombineMode((PxCombineMode::Enum)value);
+	m_material->setRestitutionCombineMode((PxCombineMode::Enum)value);
+}
+
+void Collider::SetMaterialFlag(PxMaterialFlag::Enum flag, bool value)
+{
+	m_material->setFlag(flag, value);
 }
 
 void Collider::CollectCollisionInfo(CollisionInfoType type, shared_ptr<CollisionPairInfo> info)

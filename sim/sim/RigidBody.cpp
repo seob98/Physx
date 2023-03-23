@@ -11,7 +11,7 @@ void RigidBody::Init(ColliderShape shape)
 	PxTransform pose(PxIdentity);
 
 	m_body = device->GetPhysics()->createRigidDynamic(pose);
-	m_body->setMass(1);
+	m_body->setMass(10);
 	m_body->userData = this;
 
 	ApplyFlags();

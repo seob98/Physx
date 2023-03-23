@@ -60,6 +60,7 @@ public:
 	//RestitutionFlag
 	PhysicsCombineMode GetRestitutionCombineMode() const;
 	void SetRestitutionCombineMode(PhysicsCombineMode value);
+	void SetMaterialFlag(PxMaterialFlag::Enum, bool value);
 
 public:
 	void CollectCollisionInfo(CollisionInfoType type, shared_ptr<CollisionPairInfo> info);
