@@ -64,6 +64,9 @@
     <Filter Include="소스 파일\PhysX\EventCallback\CollisionInfo">
       <UniqueIdentifier>{946016f4-f5ad-4713-9a47-bfcd9c454619}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PhysX\Collider\Mesh">
+      <UniqueIdentifier>{66549b34-2add-4f68-8936-e42b74daecd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -135,6 +138,9 @@
     <ClInclude Include="CollisionPairInfo.h">
       <Filter>소스 파일\PhysX\EventCallback\CollisionInfo</Filter>
     </ClInclude>
+    <ClInclude Include="TriangleMeshCollider.h">
+      <Filter>소스 파일\PhysX\Collider\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sim.cpp">
@@ -193,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="CollisionPairInfo.cpp">
       <Filter>소스 파일\PhysX\EventCallback\CollisionInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleMeshCollider.cpp">
+      <Filter>소스 파일\PhysX\Collider\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

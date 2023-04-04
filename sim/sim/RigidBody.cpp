@@ -3,6 +3,7 @@
 #include "BoxCollider.h"
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
+#include "TriangleMeshCollider.h"
 
 void RigidBody::Init(ColliderShape shape)
 {
@@ -39,6 +40,15 @@ void RigidBody::Init(ColliderShape shape)
 		CapsuleCollider* capsule = new CapsuleCollider;
 		capsule->Init(this);
 		m_colliders.emplace_back(capsule);
+		break;
+	}
+	case ColliderShape::COLLIDER_MESH:
+	{
+		// body needs to be kinematic to apply meshGeometry
+		TriangleMeshCollider* mesh = new TriangleMeshCollider;
+		mesh->Init(this);
+
+		m_colliders.emplace_back(mesh);
 		break;
 	}
 	}
@@ -86,7 +96,7 @@ void RigidBody::Attach(Collider* collider)
 	if (!collider->m_shape)
 		return;
 
-	m_body->attachShape(*(collider->m_shape));
+	bool attach = m_body->attachShape(*(collider->m_shape));
 	UpdateMassAndInertia();
 }
 

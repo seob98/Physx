@@ -26,11 +26,12 @@ public:
 
 
 public:
-	PxPhysics* GetPhysics() const;
-	PxMaterial* GetDefaultMaterial() const;
-	PxScene* GetScene() const;
+	PxPhysics*	GetPhysics() const;
+	PxScene*	GetScene() const;
+	PhysQuery*	GetQuery() const;
+	PxCooking*	GetCooking() const;
+	PxMaterial*	GetDefaultMaterial() const;
 	ControllerManagerWrapper* GetControllerManagerWrapper() const;
-	PhysQuery* GetQuery() const;
 
 public:
 	//Test¿ë ÇÔ¼ö
@@ -55,6 +56,8 @@ private:
 
 	PxDefaultCpuDispatcher*			m_Dispatcher = NULL;
 	PxScene*						m_Scene = NULL;
+
+	PxCooking*						m_cooking = NULL;
 
 	PxMaterial*						m_Material = NULL;
 

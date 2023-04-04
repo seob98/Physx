@@ -35,7 +35,6 @@ void PhysDevice::Init()
 	m_Dispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = m_Dispatcher;
 	
-	
 	//sceneDesc.filterShader = PxDefaultSimulationFilterShader
 	sceneDesc.filterShader = MyFilterShader::PxDefaultSimulationFilterShader;
 	sceneDesc.filterCallback = m_filterShader;
@@ -54,6 +53,12 @@ void PhysDevice::Init()
 	}
 
 #pragma endregion pvd
+	PxTolerancesScale scale;
+	PxCookingParams cookingParams(scale);
+	cookingParams.meshPreprocessParams |= PxMeshPreprocessingFlag::eWELD_VERTICES;
+	cookingParams.meshWeldTolerance = 0.001f;
+
+	m_cooking = PxCreateCooking(PX_PHYSICS_VERSION, *m_Foundation, cookingParams);
 
 	m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.6f);
 	//PxRigidStatic* groundPlane = PxCreatePlane(*m_Physics, PxPlane(0, 1, 0, 0), *m_Material);
@@ -111,6 +116,11 @@ ControllerManagerWrapper* PhysDevice::GetControllerManagerWrapper() const
 PhysQuery* PhysDevice::GetQuery() const
 {
 	return m_query;
+}
+
+PxCooking* PhysDevice::GetCooking() const
+{
+	return m_cooking;
 }
 
 
@@ -180,8 +190,10 @@ void PhysDevice::InitialPlacement()
 {
 	CreateDynamic(ColliderShape::COLLIDER_BOX, 0, 2, 0);				//plane = 0
 	CreateDynamic(ColliderShape::COLLIDER_SPHERE, 20, 20, 20);			//ball = 1
-	CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 9.5, 0);			//box1 = 2
-	CreateDynamic(ColliderShape::COLLIDER_BOX, 10, 5.5, 0);				//box1 = 3
+	CreateDynamic(ColliderShape::COLLIDER_BOX, 20, 9.5, 0);				//box1 = 2
+	CreateDynamic(ColliderShape::COLLIDER_BOX, 10, 5.5, 0);				//box2 = 3
+	CreateDynamic(ColliderShape::COLLIDER_MESH, -10, 2, 0);				//mesh = 4
+
 	m_player = new Player();
 	m_player->Init();
 
